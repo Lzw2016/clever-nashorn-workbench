@@ -212,5 +212,9 @@ module.exports = {
     alias: {
       ...webpackBaseConf.baseResolveAlias
     }
-  }
+  },
+  // 外部扩展的库
+  externals: {
+    ...webpackBaseConf.baseExternals,
+  },
 };

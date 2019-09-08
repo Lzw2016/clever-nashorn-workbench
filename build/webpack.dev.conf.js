@@ -42,6 +42,7 @@ module.exports = {
         exclude: [
           /node_modules/,
           /public\/js\//,
+          ...webpackBaseConf.eslintExclude,
           // path.resolve(config.publicPath, 'js/'),
         ],
         // 指定检查的目录
@@ -239,5 +240,9 @@ module.exports = {
     alias: {
       ...webpackBaseConf.baseResolveAlias
     }
+  },
+  // 外部扩展的库
+  externals: {
+    ...webpackBaseConf.baseExternals,
   },
 };

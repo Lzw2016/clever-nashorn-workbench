@@ -35,6 +35,7 @@
       }
     ],
     "@babel/plugin-proposal-class-properties",
-    "dynamic-import-webpack"
+    "dynamic-import-webpack",
+    "@babel/plugin-proposal-object-rest-spread"
   ]
 }

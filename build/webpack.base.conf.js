@@ -99,6 +99,11 @@ const getHtmlPlugin = () => {
   return htmlPluginArray;
 };
 
+// eslint不检测的文件
+const eslintExclude = [
+  // path.resolve(rootPath, "src/pages/vConsole/index.js"),
+];
+
 // 公用的rules
 const baseModuleRules = [
   {
@@ -222,12 +227,19 @@ const baseResolveAlias = {
   '@': config.srcPath
 };
 
+// 外部扩展的库，配置说明：key表示需要import的模块名，value表示外部库注入的全局变量名
+const baseExternals = {
+  VConsole: "VConsole",
+};
+
 module.exports = {
   entries,
   getHtmlPlugin,
+  eslintExclude,
   baseModuleRules,
   basePlugins,
   baseResolveExtensions,
   baseResolveModules,
   baseResolveAlias,
+  baseExternals,
 };

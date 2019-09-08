@@ -14,6 +14,10 @@ const pagesConfig = [
     htmlPath: 'workbench/index.html',
     jsPathArray: ['workbench/index.js'],
   },
+  {
+    htmlPath: 'vConsole/index.html',
+    jsPathArray: ['vConsole/index.js'],
+  },
 ];
 
 module.exports.pagesConfig = pagesConfig;

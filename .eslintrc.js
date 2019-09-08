@@ -13,7 +13,7 @@ module.exports = {
     'react',
     'flowtype'
   ],
-  "settings": {
+  settings: {
     "flowtype": {
       // 只检查 声明 flow语法的文件
       "onlyFilesWithFlowAnnotation": true,
@@ -25,7 +25,7 @@ module.exports = {
     // 按照模块的方式解析
     sourceType: 'module',
     // "ecmaVersion": 6,
-    "ecmaFeatures": {
+    ecmaFeatures: {
       "jsx": true
     }
   },
@@ -42,13 +42,15 @@ module.exports = {
     "localStorage": true,
     "window": true,
     "jQuery": true,
-    $: true
+    "$": true,
+    "VConsole": true,
   },
   // 重新覆盖 extends: 'standard'的规则 - // 自定义的规则 0 允许; 1 警告; 2 错误
   rules: {
     "linebreak-style": [0, "error", "windows"],
     // error类型，缩进2个空格
     "indent": ['error', 2],
+    "no-var": 2,
     // 在函数左括号的前面是否有空格
     'space-before-function-paren': 0,
     // 不检测新文件末尾是否有空行
