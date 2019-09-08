@@ -18,6 +18,10 @@ const pagesConfig = [
     htmlPath: 'vConsole/index.html',
     jsPathArray: ['vConsole/index.js'],
   },
+  {
+    htmlPath: 'monaco-editor/index.html',
+    jsPathArray: ['monaco-editor/index.js'],
+  },
 ];
 
 module.exports.pagesConfig = pagesConfig;
