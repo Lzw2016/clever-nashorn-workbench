@@ -30,9 +30,14 @@ const entries = () => {
       return;
     }
     itemConfig.jsPathArray.forEach(jsPath => {
-      const absolutePath = path.resolve(config.pagesPath, jsPath);
-      entry[entryKeyHandle(jsPath)] = absolutePath;
       count++;
+      if (jsPath && jsPath.srcPath && jsPath.outPath) {
+        const absolutePath = path.resolve(config.pagesPath, jsPath.srcPath);
+        entry[entryKeyHandle(jsPath.outPath)] = absolutePath;
+      } else {
+        const absolutePath = path.resolve(config.pagesPath, jsPath);
+        entry[entryKeyHandle(jsPath)] = absolutePath;
+      }
     });
   });
   if (count <= 0) {
@@ -80,7 +85,13 @@ const getHtmlPlugin = () => {
     }
     const jsPathArray = [];
     if (itemConfig.jsPathArray && itemConfig.jsPathArray.length > 0) {
-      itemConfig.jsPathArray.forEach(jsPath => jsPathArray.push(entryKeyHandle(jsPath)));
+      itemConfig.jsPathArray.forEach(jsPath => {
+        if (jsPath && jsPath.outPath) {
+          jsPathArray.push(entryKeyHandle(jsPath.outPath));
+        } else {
+          jsPathArray.push(entryKeyHandle(jsPath));
+        }
+      });
     }
     // console.log("jsPathArray", jsPathArray);
     const htmlWebpackConfig = webpackMerge(baseConfig, {
@@ -101,7 +112,8 @@ const getHtmlPlugin = () => {
 
 // eslint不检测的文件
 const eslintExclude = [
-  // path.resolve(rootPath, "src/pages/vConsole/index.js"),
+  /node_modules\/monaco-editor/,
+  // path.resolve(config.rootPath, "src/pages/vConsole/index.js"),
 ];
 
 // 公用的rules

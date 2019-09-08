@@ -24,6 +24,8 @@ module.exports = {
   devtool: 'eval-source-map',
   // 加载器 loader 配置项
   module: {
+    // 解决Critical dependency: require function is used in a way in which dependencies cannot be statically extracted的问题
+    unknownContextCritical: false,
     rules: [
       ...webpackBaseConf.baseModuleRules,
       {
