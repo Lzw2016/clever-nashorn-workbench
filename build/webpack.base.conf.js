@@ -212,6 +212,15 @@ const basePlugins = [
       to: './public'
     },
   ]),
+  // monaco-editor 支持
+  new CopyWebpackPlugin([
+    {
+      // 打包的静态资源目录地址
+      from: path.resolve(config.nodeModulesPath, "monaco-editor/min"),
+      // 打包到dist下面的public
+      to: './public/js/monaco-editor/min'
+    },
+  ]),
 ];
 
 if (config.needAnalyzer && config.runMode !== config.runModeEnum.dev) {

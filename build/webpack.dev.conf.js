@@ -17,7 +17,7 @@ module.exports = {
     path: config.distPath,
     filename: '[name].bundle.js',
     chunkFilename: '[name].chunk.js',
-    publicPath: "/"
+    publicPath: "/",
   },
   mode: "development",
   // 开发工具

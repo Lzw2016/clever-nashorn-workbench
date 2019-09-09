@@ -24,21 +24,17 @@ const pagesConfig = [
       'monaco-editor/index.js',
       {
         srcPath: '../../node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
-        outPath: 'public/monaco-editor/editor.worker.js',
+        outPath: 'monaco-editor/editor.worker.js',
       },
-      // {
-      //   srcPath: '../../node_modules/monaco-editor/esm/vs/language/css/css.worker.js',
-      //   outPath: 'public/monaco-editor/css.worker.js',
-      // },
-      // {
-      //   srcPath: '../../node_modules/monaco-editor/esm/vs/language/html/html.worker.js',
-      //   outPath: 'public/monaco-editor/html.worker.js',
-      // },
       // {
       //   srcPath: '../../node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js',
       //   outPath: 'public/monaco-editor/ts.worker.js',
       // },
     ],
+  },
+  {
+    htmlPath: 'monaco-editor/index2.html',
+    jsPathArray: ['monaco-editor/index2.js'],
   },
 ];
 module.exports.pagesConfig = pagesConfig;
