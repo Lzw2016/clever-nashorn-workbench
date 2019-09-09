@@ -1,0 +1,176 @@
+/*
+$nav-color: #F90;
+nav {
+  $width: 100px;
+  width: $width;
+  color: $nav-color;
+}
+*/
+//------------------------------------------------------------------------------------------------------------------------------------------- 全局变量
+$workbench-header-height: 30px;
+$workbench-footer-height: 22px;
+$body-background-color: #252526;
+$body-font-family: Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif;
+$body-font-size: 11px;
+$tools-background-color: rgba(128, 128, 128, 0.2);
+$title-background-color: rgb(30, 30, 30);
+$title-color: rgba(204, 204, 204, 0.5);
+// $gutter-background-color: rgb(28, 28, 29);
+$gutter-background-color: rgb(30, 30, 30);
+$gutter-vertical-background-color: rgba(128, 128, 128, 0.35);
+$left-background-color: rgb(37, 37, 38);
+$center-background-color: rgb(30, 30, 30);
+$editor-tools-height: 35px;
+$editor-tools-background-color: rgb(37, 37, 38);
+$panel-tools-background-color: rgba(128, 128, 128, 0.2);
+$panel-tools-color: rgb(204, 204, 204);
+$panel-tools-height: 22px;
+
+//------------------------------------------------------------------------------------------------------------------------------------------- 页面布局样式
+body {
+  // border-top: 1px solid #ccc;
+  background-color: $body-background-color;
+  font-family: $body-font-family;
+  font-size: $body-font-size;
+  user-select: none;
+}
+
+.workbench-root {
+  // border-top: 1px solid #ccc;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-width: 1200px;
+  min-height: 500px;
+
+  // 顶部工具栏
+  .workbench-header {
+    width: 100%;
+    height: $workbench-header-height;
+    background-color: $tools-background-color;
+  }
+
+  // 底部工具栏
+  .workbench-footer {
+    width: 100%;
+    height: $workbench-footer-height;
+    background-color: rgb(0, 122, 204);
+    color: rgb(255, 255, 255);
+  }
+
+  // 主内容区
+  .workbench-container {
+    width: 100%;
+    height: calc(100% - #{$workbench-header-height + $workbench-footer-height});
+
+    // 左边
+    .container-left {
+      float: left;
+      height: 100%;
+      background-color: $left-background-color;
+
+      .left-title {
+        color: $title-color;
+        background-color: $title-background-color;
+        height: $editor-tools-height;
+        // border-right: 1px solid $gutter-background-color;
+        line-height: 35px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 12px;
+      }
+    }
+
+    // 左边/中间 - 调节div
+    .gutter.gutter-horizontal {
+      float: left;
+      margin-top: $editor-tools-height;
+      height: calc(100% - #{$editor-tools-height});
+      background-color: $gutter-background-color;
+      cursor: ew-resize;
+    }
+
+    // 中间
+    .container-center {
+      float: left;
+      height: 100%;
+      background-color: $center-background-color;
+
+      // 编辑器区
+      .editor-container {
+        width: 100%;
+
+        // 编辑文件页签-工具栏
+        .editor-tools {
+          height: $editor-tools-height;
+          background-color: $editor-tools-background-color;
+        }
+
+        // 编辑器实例
+        .editor-instance {
+          width: 100%;
+          height: calc(100% - #{$editor-tools-height});
+          overflow-x: hidden;
+          overflow-y: hidden;
+        }
+      }
+
+      // 编辑器区/控制台区 - 调节div
+      .gutter.gutter-vertical {
+        width: 100%;
+        background-color: $gutter-vertical-background-color;
+        cursor: ns-resize;
+      }
+
+      // 控制台区
+      .console-container {
+        width: 100%;
+
+        #vConsoleByDebug {
+          user-select: text;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+.workbench-container {
+  .panel {
+    overflow: hidden;
+    // width: 100%;
+
+    .panel-tools {
+      height: $panel-tools-height;
+      font-size: 10px;
+      font-weight: 400;
+      line-height: $panel-tools-height;
+      color: $panel-tools-color;
+      background-color: $panel-tools-background-color;
+      padding-left: 20px;
+      // background-image: url(../../assets/images/favicon.png);
+      background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+      background-position-x: 2px;
+      background-position-y: 50%;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,6 +21,7 @@
     "font-awesome": "^4.7.0",
     "vscode-icons-js": "^9.3.0",
     "split.js": "^1.5.11",
+    "smooth-scrollbar": "^8.4.0",
     "jquery": "^3.4.1",
     "jquery.fancytree": "^2.31.0",
     "jquery-contextmenu": "^2.8.0",

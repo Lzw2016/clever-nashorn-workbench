@@ -11,6 +11,7 @@ const pagesConfig = [
     htmlPath: 'index.html',
   },
   {
+    title: "clever-nashorn-workbench",
     htmlPath: 'workbench/index.html',
     jsPathArray: ['workbench/index.js'],
   },

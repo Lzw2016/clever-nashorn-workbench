@@ -4,10 +4,55 @@
 <head>
   <meta charset="UTF-8">
   <title><%=htmlWebpackPlugin.options.title%></title>
+  <style>
+    body {
+      background-color: #252526;
+    }
+  </style>
+  <script src="/public/js/vConsole/vconsole.min.js"></script>
+  <script type="text/javascript" src="/public/js/monaco-editor/min/vs/loader.js"></script>
 </head>
 
 <body>
-  首页
+  <div class="workbench-root">
+    <!-- workbench头部(顶部工具栏) -->
+    <div class="workbench-header">
+    </div>
+
+    <!-- workbench主内容区 -->
+    <div class="workbench-container">
+      <div class="container-left">
+        <div class="left-title">资源管理器</div>
+        <div class="panel">
+          <div class="panel-tools">
+            <img src="../../../public/images/close-all.svg" />
+            <span></span>
+            <span>已打开的脚本</span>
+          </div>
+          <div id="opened-file-content" class="panel-content">
+
+          </div>
+        </div>
+      </div>
+      <div class="container-center">
+        <div class="editor-container">
+          <!-- 编辑文件页签-工具栏 -->
+          <div class="editor-tools"></div>
+          <!-- 编辑器实例 -->
+          <div id="monaco-editor-instance" class="editor-instance"></div>
+        </div>
+        <div class="console-container">
+          <!-- debug日志 -->
+          <div id="vConsoleByDebug"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- workbench底部(底部工具栏) -->
+    <div class="workbench-footer">
+      <div style="margin-left: 8px;">clever-nashorn-workbench</div>
+    </div>
+  </div>
 </body>
 
 </html>
