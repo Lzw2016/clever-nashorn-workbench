@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const config = require("./config");
+const isDev = config.runMode === config.runModeEnum.dev;
 
 // entry - jsPath 名称处理去掉.js 后缀
 const entryKeyHandle = (jsPath) => {
@@ -113,7 +114,7 @@ const getHtmlPlugin = () => {
 // eslint不检测的文件
 const eslintExclude = [
   /node_modules\/monaco-editor/,
-  // path.resolve(config.rootPath, "src/pages/vConsole/index.js"),
+  // path.resolve(config.rootPath, "src/pages/monaco-editor/index3.js"),
 ];
 
 // 公用的rules
@@ -216,7 +217,7 @@ const basePlugins = [
   new CopyWebpackPlugin([
     {
       // 打包的静态资源目录地址
-      from: path.resolve(config.nodeModulesPath, "monaco-editor/min"),
+      from: path.resolve(config.nodeModulesPath, `monaco-editor/${isDev ? 'dev' : 'min'}`),
       // 打包到dist下面的public
       to: './public/js/monaco-editor/min'
     },
@@ -251,6 +252,8 @@ const baseResolveAlias = {
 // 外部扩展的库，配置说明：key表示需要import的模块名，value表示外部库注入的全局变量名
 const baseExternals = {
   VConsole: "VConsole",
+  require: "require",
+  monaco: "monaco",
 };
 
 module.exports = {

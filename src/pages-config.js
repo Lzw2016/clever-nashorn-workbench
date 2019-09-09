@@ -36,5 +36,9 @@ const pagesConfig = [
     htmlPath: 'monaco-editor/index2.html',
     jsPathArray: ['monaco-editor/index2.js'],
   },
+  {
+    htmlPath: 'monaco-editor/index3.html',
+    jsPathArray: ['monaco-editor/index3.js'],
+  },
 ];
 module.exports.pagesConfig = pagesConfig;
