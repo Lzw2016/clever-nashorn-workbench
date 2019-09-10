@@ -76,11 +76,32 @@
         <div class="console-container">
           <!-- 控制台顶部工具栏 -->
           <div class="console-top-tools">
-
+            <div class="console-top-tabs">
+              <span class="tab-title">问题</span>
+              <span class="tab-title">输出</span>
+              <span class="tab-title active">终端</span>
+            </div>
+            <div class="console-top-buttons">
+              <select class="log-filter">
+                <option class="option" value="all">all</option>
+                <option class="option" value="debug">debug</option>
+                <option class="option" value="info">info</option>
+                <option class="option" value="log">log</option>
+                <option class="option" value="warn">warn</option>
+                <option class="option" value="error">error</option>
+              </select>
+              <div class="button console-top-expanded" title="展开/折叠"></div>
+              <div class="button console-top-close" title="关闭"></div>
+            </div>
           </div>
           <!-- debug日志 -->
           <div class="v-console-container">
-            <div class="v-console-tools"></div>
+            <div class="v-console-tools">
+              <!-- 跟随日志滚动 -->
+              <i class="button follow-log active fa fa-arrow-circle-o-down" aria-hidden="true" title="跟随滚动"></i>
+              <!-- 清除日志 -->
+              <i class="button clear-log fa fa-trash-o" aria-hidden="true" title="清除日志"></i>
+            </div>
             <div id="vConsoleByDebug"></div>
           </div>
         </div>
