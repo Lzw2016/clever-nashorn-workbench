@@ -7,11 +7,7 @@ const layout = () => {
   }
 };
 
-const layoutDebounce = lodash.debounce(
-  () => layout(),
-  50,
-  { maxWait: 80, trailing: false }
-);
+const layoutDebounce = lodash.debounce(() => layout(), 80, { maxWait: 130 });
 
 // 布局处理 - 容器左右
 const leftCenterLayout = Split(['.container-left', '.container-center'], {
@@ -29,7 +25,7 @@ const leftCenterLayout = Split(['.container-left', '.container-center'], {
 // 布局处理 - 编辑器和控制台
 const editorConsoleLayout = Split(['.editor-container', '.console-container'], {
   direction: 'vertical',
-  sizes: [70, 30],
+  sizes: [57, 43],
   // sizes: ['calc(100% - 360px)', '356px'],
   minSize: [160, 48],
   gutterSize: 5,

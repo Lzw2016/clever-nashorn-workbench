@@ -134,8 +134,9 @@ body {
         height: 100%;
 
         .console-top-tools {
+          border-bottom: 1px solid rgb(90, 90, 90);
           width: 100%;
-          height: $editor-tools-height;
+          height: $editor-tools-height - 1px;
         }
 
         .v-console-container {
@@ -147,10 +148,11 @@ body {
             width: 24px;
           }
           #vConsoleByDebug {
+            border-left: 1px solid rgb(90, 90, 90);
             float: left;
             user-select: text;
             height: 100%;
-            width: calc(100% - 24px);
+            width: calc(100% - 25px);
           }
         }
       }
