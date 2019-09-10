@@ -133,23 +133,23 @@ const baseModuleRules = [
     exclude: /node_modules/
   },
   // 图片处理
-  // {
-  //   test: /\.(png|jp?g|gif|svg|ico)$/,
-  //   use: [
-  //     {
-  //       loader: 'url-loader',
-  //       options: {
-  //         // 小于8192字节的图片打包成base 64图片
-  //         limit: 8192,
-  //         name: 'images/[name].[hash:8].[ext]',
-  //         publicPath: ''
-  //       }
-  //     },
-  //   ]
-  // },
+  {
+    test: /\.(png|jp?g|gif|svg|ico)$/,
+    use: [
+      {
+        loader: 'url-loader',
+        options: {
+          // 小于8192字节的图片打包成base 64图片
+          limit: 8192,
+          name: 'images/[name].[hash:8].[ext]',
+          publicPath: ''
+        }
+      },
+    ]
+  },
   // 文件依赖配置项——字体图标
   {
-    test: /\.(woff|woff2|svg|eot|ttf)$/,
+    test: /\.(woff|woff2|eot|ttf)$/,
     use: [
       {
         loader: 'file-loader',

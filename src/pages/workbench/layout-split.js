@@ -16,10 +16,10 @@ const layoutDebounce = lodash.debounce(
 // 布局处理 - 容器左右
 const leftCenterLayout = Split(['.container-left', '.container-center'], {
   direction: 'horizontal',
-  sizes: [10, 90],
+  sizes: [5, 95],
   // sizes: ['296px', 'calc(100% - 300px)'],
   // sizes: ['296px'],
-  minSize: [210, 800],
+  minSize: [260, 800],
   gutterSize: 6,
   cursor: 'ew-resize',
   onDrag: () => layoutDebounce(),
@@ -29,7 +29,7 @@ const leftCenterLayout = Split(['.container-left', '.container-center'], {
 // 布局处理 - 编辑器和控制台
 const editorConsoleLayout = Split(['.editor-container', '.console-container'], {
   direction: 'vertical',
-  sizes: [90, 10],
+  sizes: [70, 30],
   // sizes: ['calc(100% - 360px)', '356px'],
   minSize: [160, 48],
   gutterSize: 5,

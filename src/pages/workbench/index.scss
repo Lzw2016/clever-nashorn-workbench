@@ -25,6 +25,7 @@ $editor-tools-background-color: rgb(37, 37, 38);
 $panel-tools-background-color: rgba(128, 128, 128, 0.2);
 $panel-tools-color: rgb(204, 204, 204);
 $panel-tools-height: 22px;
+$panel-content-min-height: 48px;
 
 //------------------------------------------------------------------------------------------------------------------------------------------- 页面布局样式
 body {
@@ -35,8 +36,8 @@ body {
   user-select: none;
 }
 
+// 整体布局
 .workbench-root {
-  // border-top: 1px solid #ccc;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -130,38 +131,154 @@ body {
       // 控制台区
       .console-container {
         width: 100%;
+        height: 100%;
 
-        #vConsoleByDebug {
-          user-select: text;
+        .console-top-tools {
           width: 100%;
-          height: 100%;
+          height: $editor-tools-height;
+        }
+
+        .v-console-container {
+          width: 100%;
+          height: calc(100% - #{$editor-tools-height});
+          .v-console-tools {
+            float: left;
+            height: 100%;
+            width: 24px;
+          }
+          #vConsoleByDebug {
+            float: left;
+            user-select: text;
+            height: 100%;
+            width: calc(100% - 24px);
+          }
         }
       }
     }
   }
 }
 
-.workbench-container {
+//------------------------------------------------------------------------------------------------------------------------------------------- 组件通用样式
+// panel 布局样式
+.workbench-root {
   .panel {
     overflow: hidden;
-    // width: 100%;
+    cursor: pointer;
 
     .panel-tools {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       height: $panel-tools-height;
       font-size: 10px;
-      font-weight: 400;
+      font-weight: bold;
       line-height: $panel-tools-height;
       color: $panel-tools-color;
       background-color: $panel-tools-background-color;
       padding-left: 20px;
-      // background-image: url(../../assets/images/favicon.png);
-      background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+      background-image: url(../../assets/images/vscode-icons/dark/chevron-right.svg);
       background-position-x: 2px;
       background-position-y: 50%;
+      background-repeat: no-repeat;
+
+      &.expanded {
+        background-image: url(../../assets/images/vscode-icons/dark/chevron-down.svg);
+      }
+
+      .title {
+        display: inline-block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .actions {
+        flex-grow: 2;
+        display: inline-block;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        .button {
+          display: inline-block;
+          width: 28px;
+          height: $panel-tools-height;
+          // background-position-x: 2px;
+          background-position: 50%;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+
+    &:hover .panel-tools.expanded .actions {
+      display: flex;
+    }
+
+    .panel-content {
+      &.expanded {
+        min-height: $panel-content-min-height;
+      }
     }
   }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------- 模块具体样式
+// 左边资源管理器
+.workbench-root {
+  .panel {
+    &.opened-file {
+      .panel-tools .actions {
+        .save-all {
+          background-image: url(../../assets/images/vscode-icons/dark/save-all.svg);
+          opacity: 0.4;
+          cursor: default;
+        }
+        .close-all {
+          background-image: url(../../assets/images/vscode-icons/dark/close-all.svg);
+        }
+      }
+    }
+
+    &.workspace {
+      .panel-tools .title {
+        text-transform: uppercase;
+      }
+      .panel-tools .actions {
+        .create-file {
+          background-image: url(../../assets/images/vscode-icons/dark/new-file.svg);
+        }
+        .create-folder {
+          background-image: url(../../assets/images/vscode-icons/dark/new-folder.svg);
+        }
+        .refresh {
+          background-image: url(../../assets/images/vscode-icons/dark/refresh.svg);
+        }
+        .collapse-all {
+          background-image: url(../../assets/images/vscode-icons/dark/collapse-all.svg);
+        }
+      }
+      // .panel-content.expanded {
+      //   overflow-y: auto;
+      //   height: 500px;
+      // }
+    }
+
+    &.switch-workspace {
+      .panel-tools .actions {
+        .refresh {
+          background-image: url(../../assets/images/vscode-icons/dark/refresh.svg);
+        }
+      }
+      .panel-content.expanded {
+        height: 128px;
+      }
+    }
+  }
+  .container-left-center {
+    height: calc(100% - #{$editor-tools-height + $workbench-footer-height + 128px});
+  }
+}
 
 
 
