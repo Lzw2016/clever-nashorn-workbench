@@ -32,7 +32,8 @@
     "jquery-hotkeys": "^0.2.2",
     "hotkeys-js": "^3.7.1",
     "art-template": "^4.13.2",
-    "monaco-editor": "0.17.1"
+    "monaco-editor": "0.17.1",
+    "toastr": "^2.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

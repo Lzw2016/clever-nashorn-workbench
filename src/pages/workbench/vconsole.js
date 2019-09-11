@@ -48,8 +48,9 @@ const testLog = () => {
   console.error("[error] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
 };
 
-testLog();
+// testLog();
 
 export {
-  vConsole
+  vConsole,
+  testLog
 };

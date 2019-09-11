@@ -38,12 +38,11 @@ const needAnalyzer = false;
 
 // 代理配置
 const proxy = {
-  // '/api': {
-  //   target: 'http://localhost:3000',
-  //   pathRewrite: {
-  //     '^/api': ''
-  //   }
-  // }
+  '/api': {
+    target: 'http://127.0.0.1:18081/',
+    changeOrigin: true,
+    pathRewrite: { '^/': '' },
+  },
 };
 
 // webpack.prod.conf 中的 splitChunks.cacheGroups 扩展
