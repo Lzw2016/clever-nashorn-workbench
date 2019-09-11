@@ -14,9 +14,41 @@
 </head>
 
 <body>
-  <div class="workbench-root">
+  <div class="workbench-root" style="visibility: hidden;">
     <!-- workbench头部(顶部工具栏) -->
     <div class="workbench-header">
+      <div class="open-file-full-path">
+        <span class="workspace-title">[workspace]</span>
+        <span class="file-full-path-title">
+          <span class="path-title">src</span>
+          <span class="path-separate"></span>
+          <span class="path-title">assets</span>
+          <span class="path-separate"></span>
+          <span class="path-title">images</span>
+          <span class="path-separate"></span>
+          <span class="path-title">vscode-icons</span>
+          <span class="path-separate"></span>
+          <span class="path-title">dark</span>
+          <span class="path-separate"></span>
+          <span class="path-title">index2.js</span>
+        </span>
+      </div>
+      <div class="workbench-header-tools">
+        <!-- <div class="button debug" title="调试"></div> -->
+        <i class="fa-button fa fa-dot-circle-o" aria-hidden="true" title="定位脚本位置"></i>
+        <i class="fa-button fa fa-play" aria-hidden="true" title="正在运行"></i>
+        <i class="fa-button fa fa-stop" aria-hidden="true" title="停止调试"></i>
+        <select class="select-method" title="选择调试方法名">
+          <option value="">请选择方法名</option>
+          <option value="method1">method1</option>
+          <option value="method2">method2</option>
+          <option value="method3">method3</option>
+        </select>
+        <i class="fa-button fa fa-bug debugging" aria-hidden="true" title="调试"></i>
+        <i class="fa-button fa fa-file-text-o" aria-hidden="true" title="运行日志"></i>
+        <i class="fa-button fa fa-history" aria-hidden="true" title="查看文件历史"></i>
+        <div class="button console" title="显示控制台"></div>
+      </div>
     </div>
 
     <!-- workbench主内容区 -->
@@ -69,7 +101,46 @@
       <div class="container-center">
         <div class="editor-container">
           <!-- 编辑文件页签-工具栏 -->
-          <div class="editor-tools"></div>
+          <div class="editor-tools">
+            <div class="open-file-tabs">
+              <div class="file-title">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index1.js</span>
+                <span class="file-close need-save" title="关闭"></span>
+              </div>
+              <div class="file-title active">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index2.js</span>
+                <span class="file-close" title="关闭"></span>
+              </div>
+              <div class="file-title">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index3.js</span>
+                <span class="file-close" title="关闭"></span>
+              </div>
+              <div class="file-title">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">很长很长很长很长很长很长很长很长很长很长.js</span>
+                <span class="file-close" title="关闭"></span>
+              </div>
+              <div class="file-title">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index5.js</span>
+                <span class="file-close" title="关闭"></span>
+              </div>
+              <div class="file-title">
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index6.js</span>
+                <span class="file-close" title="关闭"></span>
+              </div>
+            </div>
+            <div class="editor-tools-buttons">
+              <div class="button save-file" title="保存文件"></div>
+              <div class="button lock-file" title="设置为只读"></div>
+              <div class="button delete-file" title="删除文件"></div>
+              <!-- <div class="button close-all-file" title="关闭所有"></div> -->
+            </div>
+          </div>
           <!-- 编辑器实例 -->
           <div id="monaco-editor-instance" class="editor-instance"></div>
         </div>
@@ -82,13 +153,13 @@
               <span class="tab-title active">终端</span>
             </div>
             <div class="console-top-buttons">
-              <select class="log-filter">
-                <option class="option" value="all">all</option>
-                <option class="option" value="debug">debug</option>
-                <option class="option" value="info">info</option>
-                <option class="option" value="log">log</option>
-                <option class="option" value="warn">warn</option>
-                <option class="option" value="error">error</option>
+              <select class="log-filter" title="日志级别过滤">
+                <option value="all">all</option>
+                <option value="debug">debug</option>
+                <option value="info">info</option>
+                <option value="log">log</option>
+                <option value="warn">warn</option>
+                <option value="error">error</option>
               </select>
               <div class="button console-top-expanded" title="展开/折叠"></div>
               <div class="button console-top-close" title="关闭"></div>
@@ -98,9 +169,11 @@
           <div class="v-console-container">
             <div class="v-console-tools">
               <!-- 跟随日志滚动 -->
-              <i class="button follow-log active fa fa-arrow-circle-o-down" aria-hidden="true" title="跟随滚动"></i>
+              <div class="button follow-log active" title="跟随滚动"></div>
               <!-- 清除日志 -->
-              <i class="button clear-log fa fa-trash-o" aria-hidden="true" title="清除日志"></i>
+              <div class="button clear-log" title="清除日志"></div>
+              <!-- 断开连接 -->
+              <div class="button disconnect" title="断开日志"></div>
             </div>
             <div id="vConsoleByDebug"></div>
           </div>
