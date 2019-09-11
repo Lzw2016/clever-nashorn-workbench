@@ -1,6 +1,7 @@
 import * as monacoRequire from 'require';
 import $ from 'jquery';
 import lodash from 'lodash';
+import AppContext from './context';
 
 // monaco-editor 资源文件路径配置
 monacoRequire.config({
@@ -91,7 +92,7 @@ $(document).ready(function () {
     editorInstance = monaco.editor.create(editorInstanceDom, options);
     // 绑定快捷键
     keyMapBinding(monaco);
-    window.editorInstance = editorInstance;
+    AppContext.editorInstance = editorInstance;
   });
 
   // 大小发生变化

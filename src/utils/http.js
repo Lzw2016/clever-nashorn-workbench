@@ -47,7 +47,7 @@ const errorNotice = error => {
       notification.error({ message: `${data.error} -> ${data.path}`, description: data.message });
       return true;
     }
-    const errortext = CodeMessage(response.status) || response.statusText;
+    const errortext = CodeMessage[response.status] || response.statusText;
     notification.error({
       message: `请求错误,响应状态码:${response.status}`,
       description: errortext,

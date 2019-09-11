@@ -21,10 +21,18 @@ options.showMethod = "fadeIn";
 options.hideMethod = "fadeOut";
 
 const notification = {
-  error,
-  warning,
-  info,
-  success,
+  error: ({ message, description }) => {
+    error(description || message);
+  },
+  warning: ({ message, description }) => {
+    warning(description || message);
+  },
+  info: ({ message, description }) => {
+    info(description || message);
+  },
+  success: ({ message, description }) => {
+    success(description || message);
+  },
   clear,
   getContainer,
   subscribe,

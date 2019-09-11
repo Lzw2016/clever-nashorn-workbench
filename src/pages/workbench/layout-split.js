@@ -1,9 +1,10 @@
 import Split from "split.js";
 import lodash from 'lodash';
+import AppContext from './context';
 
 const layout = () => {
-  if (window.editorInstance) {
-    window.editorInstance.layout();
+  if (AppContext.editorInstance) {
+    AppContext.editorInstance.layout();
   }
 };
 

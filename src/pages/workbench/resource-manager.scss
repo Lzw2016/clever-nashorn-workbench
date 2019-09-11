@@ -1,0 +1,14 @@
+ul.fancytree-container {
+  background-color: rgb(37, 37, 38);
+  border: none;
+  color: rgba(204, 204, 204, 0.9);
+  padding: 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+span.fancytree-title {
+  color: rgba(204, 204, 204, 0.9);
+}
