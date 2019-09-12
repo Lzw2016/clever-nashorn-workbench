@@ -1,0 +1,32 @@
+.toast-bottom-right {
+  right: 18px;
+  bottom: 24px;
+}
+
+#toast-container > div:hover {
+  box-shadow: rgb(0, 0, 0) 0px 0px 8px;
+}
+
+#toast-container > div {
+  background-color: rgb(48, 48, 49);
+  box-shadow: rgb(0, 0, 0) 0px 0px 8px;
+}
+
+#toast-container {
+  .toast-success {
+    background-image: url(../assets/images/success.svg) !important;
+    background-size: 26px;
+  }
+  .toast-info {
+    background-image: url(../assets/images/info.svg) !important;
+    background-size: 26px;
+  }
+  .toast-warning {
+    background-image: url(../assets/images/warning.svg) !important;
+    background-size: 26px;
+  }
+  .toast-error {
+    background-image: url(../assets/images/error.svg) !important;
+    background-size: 26px;
+  }
+}

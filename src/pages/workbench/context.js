@@ -37,13 +37,16 @@ const AppContext = {
     buttons: {
       close: $(".console-top-tools .console-top-buttons .console-top-close"),
       expandedFolded: $(".console-top-tools .console-top-buttons .console-top-expanded-folded"),
+      logFilter: $(".console-top-tools .console-top-buttons .log-filter"),
     },
   },
 
   // debug日志工具栏
   vConsoleTools: {
     clearLog: $(".v-console-tools .clear-log"),
+    followLog: $(".v-console-tools .follow-log"),
   },
 };
 
+window.AppContext = AppContext;
 export default AppContext;

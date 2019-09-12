@@ -7,7 +7,7 @@ import AppContext from "./context";
 // vconsole 初始化
 const vConsole = new VConsole({
   defaultPlugins: [],
-  disableLogScrolling: false,
+  disableLogScrolling: true,
   onReady: function () {
     vConsole.show();
     if (Browser.client.name !== "Chrome") {
@@ -22,6 +22,36 @@ const vConsole = new VConsole({
   }
 });
 AppContext.vConsole = vConsole;
+
+// 清除日志
+AppContext.vConsoleTools.clearLog.on("click", () => {
+  vConsole.pluginList.default.clearLog();
+  console.clear();
+});
+
+// 跟随日志滚动
+if (vConsole && vConsole.option && vConsole.option.disableLogScrolling) {
+  AppContext.vConsoleTools.followLog.removeClass("active");
+} else {
+  if (!AppContext.vConsoleTools.followLog.hasClass("active")) {
+    AppContext.vConsoleTools.followLog.addClass("active");
+  }
+}
+AppContext.vConsoleTools.followLog.on("click", () => {
+  AppContext.vConsoleTools.followLog.toggleClass("active");
+  vConsole.option.disableLogScrolling = !AppContext.vConsoleTools.followLog.hasClass("active");
+  if (vConsole.option.disableLogScrolling) {
+    AppContext.vConsoleTools.followLog.removeClass("active");
+  } else {
+    AppContext.vConsoleTools.followLog.addClass("active");
+  }
+});
+
+// 过滤日志类型
+vConsole.pluginList.default.showLogType(AppContext.consoleTopTools.buttons.logFilter.val());
+AppContext.consoleTopTools.buttons.logFilter.on("change", () => {
+  vConsole.pluginList.default.showLogType(AppContext.consoleTopTools.buttons.logFilter.val());
+});
 
 const testLog = () => {
   // 打印数据
@@ -59,16 +89,9 @@ const testLog = () => {
   console.warn("[warn] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
   console.error("[error] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
 };
-
 testLog();
-
-// 清除日志
-AppContext.vConsoleTools.clearLog.on("click", () => {
-  // vConsole.pluginList.default.console.clear();
-  // console.log(vConsole);
-  console.clear();
-});
-
+let count = 0;
+window.setInterval(() => console.log("打印JS变量 | date ", new Date(), count++, " | 行尾"), 800);
 export {
   vConsole,
   testLog
