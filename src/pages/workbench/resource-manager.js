@@ -1,11 +1,15 @@
-import "jquery";
+// import $ from "jquery";
 // import "jquery.fancytree/dist/skin-win8-n/ui.fancytree.less";
 import "./resource-manager.less";
 import "./resource-manager.scss";
 import { createTree } from "jquery.fancytree";
 import 'jquery.fancytree/dist/modules/jquery.fancytree.edit';
 import 'jquery.fancytree/dist/modules/jquery.fancytree.filter';
+// import Scrollbar from 'smooth-scrollbar';
+import 'simplebar/dist/simplebar.css';
+import SimpleBar from 'simplebar/dist/simplebar.js';
 import AppContext from "./context";
+import Browser from "@/utils/browser";
 import { tree } from "@/api/js-code-file-controller";
 
 // 转换树节点
@@ -45,7 +49,7 @@ const reloadWorkspaceTree = async () => {
   const data = await tree(AppContext.bizType, AppContext.groupName);
   transformTreeNode(data);
   console.log(data);
-  const workspaceTree = createTree('#workspace-content', {
+  const workspaceTree = createTree('#workspace-file-tree', {
     extensions: ['edit', 'filter'],
     treeId: "id",
     source: data,
@@ -63,7 +67,7 @@ const reloadWorkspaceTree = async () => {
     escapeTitles: false, // Escape node.title 显示内容
     generateIds: false, // 生成id属性，如 <span id='fancytree-id-KEY'>
     idPrefix: "ft_", // 用于生成节点id like <span id='fancytree-id-<key>'>
-    icon: false, // 显示节点图标
+    icon: true, // 显示节点图标
     keyboard: true, // 支持键盘导航
     keyPathSeparator: "/", // 由node.getKeyPath()和tree.loadKeyPath()使用
     minExpandLevel: 1, // 1: 根节点不可折叠
@@ -75,50 +79,59 @@ const reloadWorkspaceTree = async () => {
     // 使用title作为工具提示(也可以指定回调)
     tooltip: (_, data) => data.node.data.fullPath,
     edit: {
-      // triggerStart: ["clickActive", "dblclick"],
+      // triggerStart: ["dblclick"], // clickActive
       beforeEdit: function (event, data) {
         // Return false to prevent edit mode
       },
       edit: function (event, data) {
         // Editor was opened (available as data.input)
       },
-      beforeClose: function (event, data) {
-        // Return false to prevent cancel/save (data.input is available)
-        console.log(event.type, event, data);
-        if (data.originalEvent.type === "mousedown") {
-          // We could prevent the mouse click from generating a blur event
-          // (which would then again close the editor) and return `false` to keep
-          // the editor open:
-          //                  data.originalEvent.preventDefault();
-          //                  return false;
-          // Or go on with closing the editor, but discard any changes:
-          //                  data.save = false;
-        }
-      },
-      save: function (event, data) {
-        // Save data.input.val() or return false to keep editor open
-        console.log("save...", this, data);
-        // Simulate to start a slow ajax request...
-        setTimeout(function () {
-          $(data.node.span).removeClass("pending");
-          // Let's pretend the server returned a slightly modified
-          // title:
-          data.node.setTitle(data.node.title + "!");
-        }, 2000);
-        // We return true, so ext-edit will set the current user input
-        // as title
-        return true;
-      },
-      close: function (event, data) {
-        // Editor was removed
-        if (data.save) {
-          // Since we started an async request, mark the node as preliminary
-          $(data.node.span).addClass("pending");
-        }
-      }
+      // beforeClose: function (event, data) {
+      //   // Return false to prevent cancel/save (data.input is available)
+      //   console.log(event.type, event, data);
+      //   if (data.originalEvent.type === "mousedown") {
+      //     // We could prevent the mouse click from generating a blur event
+      //     // (which would then again close the editor) and return `false` to keep
+      //     // the editor open:
+      //     //                  data.originalEvent.preventDefault();
+      //     //                  return false;
+      //     // Or go on with closing the editor, but discard any changes:
+      //     //                  data.save = false;
+      //   }
+      // },
+      // save: function (event, data) {
+      //   // Save data.input.val() or return false to keep editor open
+      //   console.log("save...", this, data);
+      //   // Simulate to start a slow ajax request...
+      //   setTimeout(function () {
+      //     $(data.node.span).removeClass("pending");
+      //     // Let's pretend the server returned a slightly modified
+      //     // title:
+      //     data.node.setTitle(data.node.title + "!");
+      //   }, 2000);
+      //   // We return true, so ext-edit will set the current user input
+      //   // as title
+      //   return true;
+      // },
+      // close: function (event, data) {
+      //   // Editor was removed
+      //   if (data.save) {
+      //     // Since we started an async request, mark the node as preliminary
+      //     $(data.node.span).addClass("pending");
+      //   }
+      // }
     }
   });
-  console.log(workspaceTree);
+  if (Browser.client.name !== "Chrome") {
+    new SimpleBar(
+      document.querySelector('.workspace .workspace-content'),
+      {
+        autoHide: true,
+        scrollbarMinSize: 35,
+      }
+    );
+  }
+  AppContext.workspaceTree = workspaceTree;
 };
 
 reloadWorkspaceTree();

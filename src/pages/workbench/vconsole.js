@@ -1,5 +1,8 @@
+import 'simplebar/dist/simplebar.css';
+import SimpleBar from 'simplebar/dist/simplebar.js';
 import VConsole from 'VConsole';
-// import Scrollbar from 'smooth-scrollbar';
+import Browser from "@/utils/browser";
+import AppContext from "./context";
 
 // vconsole 初始化
 const vConsole = new VConsole({
@@ -7,9 +10,18 @@ const vConsole = new VConsole({
   disableLogScrolling: false,
   onReady: function () {
     vConsole.show();
-    // Scrollbar.init(document.querySelector("#vConsoleByDebug"));
+    if (Browser.client.name !== "Chrome") {
+      new SimpleBar(
+        document.querySelector('#vConsoleByDebug .vc-content'),
+        {
+          autoHide: true,
+          scrollbarMinSize: 35,
+        }
+      );
+    }
   }
 });
+AppContext.vConsole = vConsole;
 
 const testLog = () => {
   // 打印数据
@@ -48,7 +60,7 @@ const testLog = () => {
   console.error("[error] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
 };
 
-// testLog();
+testLog();
 
 export {
   vConsole,

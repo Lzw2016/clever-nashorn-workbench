@@ -1,7 +1,8 @@
+// 自定义样式
 ul.fancytree-container {
   background-color: rgb(37, 37, 38);
   border: none;
-  color: rgba(204, 204, 204, 0.9);
+  color: rgba(204, 204, 204, 0.8);
   padding: 0;
 
   &:focus {
@@ -10,5 +11,97 @@ ul.fancytree-container {
 }
 
 span.fancytree-title {
-  color: rgba(204, 204, 204, 0.9);
+  color: rgba(204, 204, 204, 0.8);
+}
+
+#workspace-file-tree {
+  ul > li > span {
+    margin: 0;
+  }
+
+  ul.fancytree-container {
+    & > ul {
+      padding: 0;
+      & > li {
+        padding: 0;
+      }
+    }
+    ul {
+      padding: 0;
+      & > li {
+        padding: 0;
+        & > span {
+          padding: 0 0 0 8px;
+          width: calc(100% - 8px);
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  span.fancytree-node {
+    border: none;
+    font-size: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    input {
+      color: rgba(255, 255, 255, 0.8);
+      background-color: rgb(60, 60, 60);
+      border: 1px solid rgba(14, 99, 156, 0.8);
+      &:focus {
+        outline-color: rgba(14, 99, 156, 0.8);
+        outline-width: 1px ;
+        outline-style: solid ;
+      }
+    }
+
+    .fancytree-expander {
+      border: none;
+      display: inline-block;
+      height: 22px;
+      background-position: 50%;
+      background-repeat: no-repeat;
+    }
+    &.fancytree-folder {
+      .fancytree-expander {
+        background-image: url('../../assets/images/vscode-icons/dark/chevron-right.svg');
+      }
+      &.fancytree-expanded .fancytree-expander{
+        background-image: url('../../assets/images/vscode-icons/dark/chevron-down.svg');
+      }
+    }
+    .fancytree-icon {
+      border: none;
+      display: inline-block;
+      height: 22px;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      background-image: url('../../assets/images/vscode-icons/folder-file-type/file_type_js.svg');
+    }
+    .fancytree-title {
+      flex-grow: 2;
+      border: none;
+      display: inline-block;
+      font-family: Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      height: 22px;
+      line-height: 22px;
+      margin-left: 0;
+    }
+  }
+
+  span.fancytree-node.fancytree-folder > span.fancytree-icon {
+    display: none;
+    // background-position: 0 0;
+    // background-image: url('../../assets/images/vscode-icons/dark/folder-active.svg');
+  }
+  span.fancytree-node.fancytree-folder.fancytree-expanded > span.fancytree-icon {
+    display: none;
+    // background-image: url('../../assets/images/vscode-icons/dark/folder-opened.svg');
+  }
 }

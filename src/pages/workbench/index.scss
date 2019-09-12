@@ -72,9 +72,17 @@ body {
     .container-left {
       float: left;
       height: 100%;
+      width: 100%;
       background-color: $left-background-color;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: flex-start;
 
       .left-title {
+        flex-shrink: 0;
+        width: 100%;
         color: $title-color;
         background-color: $title-background-color;
         height: $editor-tools-height;
@@ -84,6 +92,22 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         padding-left: 12px;
+      }
+      .opened-file {
+        width: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .workspace {
+        width: 100%;
+        flex-grow: 2;
+        flex-shrink: 2;
+        overflow: hidden;
+      }
+      .switch-workspace {
+        width: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
       }
     }
 
@@ -226,7 +250,8 @@ body {
 
 // 修改debug滚动条样式
 #vConsoleByDebug .vc-content {
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: auto;
   // /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
   // &::-webkit-scrollbar{
   //   width: 8px;
@@ -259,6 +284,27 @@ body {
   }
   &:hover::-webkit-scrollbar-thumb {
     display: block;
+  }
+  .simplebar-track {
+    color: rgb(36, 36, 36);
+    background-color: rgb(36, 36, 36);
+    &.simplebar-horizontal {
+      width: 10px;
+    }
+    &.simplebar-vertical {
+      width: 9px;
+      border-left: 1px solid rgb(57, 57, 57);
+    }
+    .simplebar-scrollbar {
+      width: 10px;
+      right: 0;
+      &:before {
+        color: rgb(66, 66, 66);
+        background-color: rgb(66, 66, 66);
+        border-radius: 0;
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -301,6 +347,48 @@ body {
       //   overflow-y: auto;
       //   height: 500px;
       // }
+      .workspace-content {
+        border-top: 1px solid rgb(37, 37, 38);
+        border-bottom: 1px solid rgb(37, 37, 38);
+        // margin-bottom: 32px;
+        height: calc(100% - #{$panel-tools-height + 2px});
+        overflow-y: auto;
+        overflow-x: hidden;
+        cursor: default;
+        #workspace-file-tree {
+          cursor: pointer;
+          margin-bottom: 64px;
+        }
+        &::-webkit-scrollbar{
+          width: 12px;
+          background-color: rgb(37, 37, 38);
+        }
+        &::-webkit-scrollbar-track{
+          background-color: rgb(37, 37, 38);
+        }
+        &::-webkit-scrollbar-thumb{
+          display: none;
+          background-color: rgb(73, 75, 76);
+        }
+        &:hover::-webkit-scrollbar-thumb {
+          display: block;
+        }
+        .simplebar-track {
+          &.simplebar-vertical {
+            width: 10px;
+          }
+          .simplebar-scrollbar {
+            width: 10px;
+            right: 0;
+            &:before {
+              background-color: rgb(73, 75, 76);
+              color: rgb(73, 75, 76);
+              border-radius: 0;
+              // opacity: 0;
+            }
+          }
+        }
+      }
     }
 
     &.switch-workspace {
@@ -313,9 +401,6 @@ body {
         height: 128px;
       }
     }
-  }
-  .container-left-center {
-    height: calc(100% - #{$editor-tools-height + $workbench-footer-height + 128px});
   }
 }
 
