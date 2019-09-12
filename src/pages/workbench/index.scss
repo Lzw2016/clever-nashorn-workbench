@@ -36,6 +36,34 @@ body {
   user-select: none;
 }
 
+.show-container-left {
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  top: 80px;
+  left: -6px;
+  // display: inline-block;
+  width: 32px;
+  height: 24px;
+  background-color: rgb(25, 25, 25);
+  border-radius: 0 8px 8px 0;
+  border-top: 1px solid rgb(37, 37, 38);
+  border-right: 1px solid rgb(37, 37, 38);
+  border-bottom: 1px solid rgb(37, 37, 38);
+  box-shadow: 0 0 1px rgb(37, 37, 38);
+  z-index: 9999999;
+  background-position-x: 60%;
+  background-position-y: 50%;
+  background-repeat: no-repeat;
+  // background-image: url(../../assets/images/vscode-icons/dark/arrow-right.svg);
+  background-image: url(../../assets/images/vscode-icons/dark/folder.svg);
+  background-size: 18px;
+  &:hover {
+    box-shadow: 0 0 3px rgb(37, 37, 38);
+    left: -2px;
+  }
+}
+
 // 整体布局
 .workbench-root {
   width: 100%;
@@ -79,19 +107,43 @@ body {
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: flex-start;
-
       .left-title {
         flex-shrink: 0;
         width: 100%;
         color: $title-color;
         background-color: $title-background-color;
         height: $editor-tools-height;
-        // border-right: 1px solid $gutter-background-color;
-        line-height: 35px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-left: 12px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        .title {
+          line-height: 35px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding-left: 12px;
+        }
+        .actions {
+          padding-right: 8px;
+          flex-grow: 2;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: flex-end;
+          .button {
+            cursor: pointer;
+            display: inline-block;
+            width: 28px;
+            height: $panel-tools-height;
+            background-position: 50%;
+            background-repeat: no-repeat;
+            &.close {
+              background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+            }
+          }
+        }
       }
       .opened-file {
         width: 100%;
@@ -451,8 +503,14 @@ body {
       margin: 0 4px;
     }
 
-    .console-top-expanded {
-      background-image: url(../../assets/images/vscode-icons/dark/chevron-down.svg);
+    .console-top-expanded-folded {
+      background-image: url(../../assets/images/vscode-icons/dark/chevron-up.svg);
+      &.expanded {
+        background-image: url(../../assets/images/vscode-icons/dark/chevron-up.svg);
+      }
+      &.folded {
+        background-image: url(../../assets/images/vscode-icons/dark/chevron-down.svg);
+      }
     }
     .console-top-close {
       background-image: url(../../assets/images/vscode-icons/dark/close.svg);

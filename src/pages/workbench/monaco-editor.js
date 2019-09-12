@@ -93,6 +93,7 @@ $(document).ready(function () {
     // 绑定快捷键
     keyMapBinding(monaco);
     AppContext.editorInstance = editorInstance;
+    AppContext.monaco = monaco;
   });
 
   // 大小发生变化

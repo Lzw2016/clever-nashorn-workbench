@@ -9,7 +9,7 @@ import 'jquery.fancytree/dist/modules/jquery.fancytree.filter';
 import 'simplebar/dist/simplebar.css';
 import SimpleBar from 'simplebar/dist/simplebar.js';
 import AppContext from "./context";
-import Browser from "@/utils/browser";
+// import Browser from "@/utils/browser";
 import { tree } from "@/api/js-code-file-controller";
 
 // 转换树节点
@@ -122,15 +122,13 @@ const reloadWorkspaceTree = async () => {
       // }
     }
   });
-  if (Browser.client.name !== "Chrome") {
-    new SimpleBar(
-      document.querySelector('.workspace .workspace-content'),
-      {
-        autoHide: true,
-        scrollbarMinSize: 35,
-      }
-    );
-  }
+  new SimpleBar(
+    document.querySelector('.workspace .workspace-content'),
+    {
+      autoHide: true,
+      scrollbarMinSize: 35,
+    }
+  );
   AppContext.workspaceTree = workspaceTree;
 };
 

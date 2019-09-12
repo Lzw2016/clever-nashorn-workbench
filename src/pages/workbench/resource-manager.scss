@@ -60,8 +60,10 @@ span.fancytree-title {
     }
 
     .fancytree-expander {
+      flex-shrink: 0;
       border: none;
       display: inline-block;
+      width: 16px;
       height: 22px;
       background-position: 50%;
       background-repeat: no-repeat;
@@ -75,6 +77,7 @@ span.fancytree-title {
       }
     }
     .fancytree-icon {
+      flex-shrink: 0;
       border: none;
       display: inline-block;
       height: 22px;
@@ -84,8 +87,12 @@ span.fancytree-title {
     }
     .fancytree-title {
       flex-grow: 2;
+      flex-shrink: 2;
       border: none;
       display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
       font-family: Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif;
       font-size: 13px;
       font-weight: 500;
