@@ -62,6 +62,13 @@ const testLog = () => {
 
 testLog();
 
+// 清除日志
+AppContext.vConsoleTools.clearLog.on("click", () => {
+  // vConsole.pluginList.default.console.clear();
+  // console.log(vConsole);
+  console.clear();
+});
+
 export {
   vConsole,
   testLog

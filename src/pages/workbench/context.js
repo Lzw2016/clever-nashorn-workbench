@@ -39,6 +39,11 @@ const AppContext = {
       expandedFolded: $(".console-top-tools .console-top-buttons .console-top-expanded-folded"),
     },
   },
+
+  // debug日志工具栏
+  vConsoleTools: {
+    clearLog: $(".v-console-tools .clear-log"),
+  },
 };
 
 export default AppContext;
