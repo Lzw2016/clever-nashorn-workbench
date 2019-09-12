@@ -89,7 +89,7 @@ const testLog = () => {
   console.warn("[warn] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
   console.error("[error] -- 打印JS变量 | test ", JSON.stringify(1), " | 行尾");
 };
-testLog();
+// testLog();
 let count = 0;
 window.setInterval(() => console.log("打印JS变量 | date ", new Date(), count++, " | 行尾"), 800);
 export {

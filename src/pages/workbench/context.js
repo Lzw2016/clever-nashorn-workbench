@@ -29,6 +29,53 @@ const AppContext = {
     }
   },
 
+  // 已打开的文件
+  openedFile: {
+    tools: {
+      title: $(".opened-file .panel-tools .title"),
+      actions: {
+        saveAll: $(".opened-file .panel-tools .actions .save-all"),
+        closeAll: $(".opened-file .panel-tools .actions .close-all"),
+      },
+    },
+    content: $(".opened-file .panel-content"),
+  },
+
+  // workspace面板
+  workspacePanel: {
+    tools: {
+      title: $(".workspace .panel-tools .title"),
+      actions: {
+        createFile: $(".workspace .panel-tools .actions .create-file"),
+        createFolder: $(".workspace .panel-tools .actions .create-folder"),
+        refresh: $(".workspace .panel-tools .actions .refresh"),
+        collapseAll: $(".workspace .panel-tools .actions .collapse-all"),
+      },
+    },
+    content: $(".workspace .workspace-content"),
+  },
+
+  // 选择工作空间
+  switchWorkspace: {
+    tools: {
+      title: $(".switch-workspace .panel-tools .title"),
+      actions: {
+        refresh: $(".switch-workspace .panel-tools .actions .refresh"),
+      },
+    },
+    panelContent: $(".switch-workspace .panel-content"),
+    content: $("#switch-workspace-content"),
+  },
+
+  editorTools: {
+    fileTabs: $(".editor-tools .open-file-tabs"),
+    buttons: {
+      saveFile: $(".editor-tools .editor-tools-buttons .save-file"),
+      lockFile: $(".editor-tools .editor-tools-buttons .lock-file"),
+      deleteFile: $(".editor-tools .editor-tools-buttons .delete-file"),
+    },
+  },
+
   // 控制台顶部工具栏
   consoleTopTools: {
     tabs: {
