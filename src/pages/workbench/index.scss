@@ -62,6 +62,9 @@ body {
     box-shadow: 0 0 3px rgb(37, 37, 38);
     left: -2px;
   }
+  &:active {
+    background-size: 20px;
+  }
 }
 
 // 整体布局
@@ -139,6 +142,9 @@ body {
             height: $panel-tools-height;
             background-position: 50%;
             background-repeat: no-repeat;
+            &:active {
+              background-size: 18px;
+            }
             &.close {
               background-image: url(../../assets/images/vscode-icons/dark/close.svg);
             }
@@ -284,6 +290,9 @@ body {
           height: $panel-tools-height;
           background-position: 50%;
           background-repeat: no-repeat;
+          &:active {
+            background-size: 18px;
+          }
         }
       }
     }
@@ -382,6 +391,9 @@ body {
         text-transform: uppercase;
       }
       .panel-tools .actions {
+        .position-file {
+          background-image: url(../../assets/images/positioning.svg);
+        }
         .create-file {
           background-image: url(../../assets/images/vscode-icons/dark/new-file.svg);
         }
@@ -501,6 +513,9 @@ body {
       background-repeat: no-repeat;
       background-size: 16px;
       margin: 0 4px;
+      &:active {
+        background-size: 18px;
+      }
     }
 
     .console-top-expanded-folded {
@@ -552,11 +567,9 @@ body {
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: 16px;
-
     &:hover {
       background-color: rgb(60, 63, 65);
     }
-
     &.active {
       background-color: rgb(60, 63, 65);
     }
@@ -680,6 +693,9 @@ body {
       background-repeat: no-repeat;
       background-size: 16px;
       margin: 0 4px;
+      &:active {
+        background-size: 18px;
+      }
     }
 
     // .close-all-file {

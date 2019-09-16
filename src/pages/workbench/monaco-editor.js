@@ -1,5 +1,4 @@
 import * as monacoRequire from 'require';
-import $ from 'jquery';
 import lodash from 'lodash';
 import AppContext from './context';
 
@@ -109,7 +108,3 @@ $(document).ready(function () {
     )
   );
 });
-
-export {
-  editorInstance,
-};

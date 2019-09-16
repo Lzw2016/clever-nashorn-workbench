@@ -1,12 +1,15 @@
 import './index.scss';
 import 'font-awesome/css/font-awesome.min.css';
+import 'simplebar/dist/simplebar.css';
 // import lodash from 'lodash';
 import $ from 'jquery';
 // import notification from '@/utils/notification';
-import { leftCenterLayout } from './layout-split';
-import { vConsole } from './vconsole';
-import { editorInstance } from './monaco-editor';
-import resourceManager from './resource-manager';
+import './context';
+import './layout-split';
+import './vconsole';
+import './monaco-editor';
+import './resource-manager';
+import './editor-file-tools';
 
 $(document).ready(() => {
   // 显示内容
@@ -14,10 +17,3 @@ $(document).ready(() => {
   // 禁止鼠标右键菜单
   document.oncontextmenu = () => false;
 });
-
-export {
-  leftCenterLayout,
-  vConsole,
-  editorInstance,
-  resourceManager,
-};

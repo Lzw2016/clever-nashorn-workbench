@@ -1,10 +1,17 @@
-import $ from 'jquery';
-
 // 整个App的上下文管理
 const AppContext = {
+  // ------------------------------------------------------------------------------------------------------------------------------------------ 全局数据
+
   // 当前的工作空间位置
   bizType: "default",
   groupName: "default",
+
+  // ------------------------------------------------------------------------------------------------------------------------------------------ 全局状态
+
+  // 布局 - 容器左右
+  leftCenterLayout: undefined,
+  // 布局 - 编辑器和控制台
+  editorConsoleLayout: undefined,
   // vConsole实例
   vConsole: undefined,
   // 工作空间树实例
@@ -13,6 +20,10 @@ const AppContext = {
   monaco: undefined,
   // 编辑器实例
   editorInstance: undefined,
+  // 已经打开的文件页签对象 id -> jsCodeFile(数据库数据) TODO 需要使用数组
+  openFileArray: {},
+
+  // ------------------------------------------------------------------------------------------------------------------------------------------ UI按钮组件
 
   // 显示资源管理器
   showContainerLeft: $(".show-container-left"),
@@ -46,6 +57,7 @@ const AppContext = {
     tools: {
       title: $(".workspace .panel-tools .title"),
       actions: {
+        positionFile: $(".workspace .panel-tools .actions .position-file"),
         createFile: $(".workspace .panel-tools .actions .create-file"),
         createFolder: $(".workspace .panel-tools .actions .create-folder"),
         refresh: $(".workspace .panel-tools .actions .refresh"),
@@ -67,6 +79,7 @@ const AppContext = {
     content: $("#switch-workspace-content"),
   },
 
+  // 编辑器工具栏
   editorTools: {
     fileTabs: $(".editor-tools .open-file-tabs"),
     buttons: {
