@@ -1,4 +1,4 @@
-// import lodash from "lodash";
+import lodash from "lodash";
 import AppContext from "./context";
 
 // 文件页签事件处理
@@ -16,23 +16,36 @@ $(document).on("click", ".editor-container .editor-tools .open-file-tabs .file-t
     if (target.hasClass("need-save")) {
       console.log("需要保存");
     }
-    AppContext.openFileArray[id] = undefined;
-    AppContext.editorInstance.setValue("");
+    let fileData;
+    lodash.forEach(AppContext.openFileArray, file => {
+      if (!fileData) {
+        fileData = file;
+        return;
+      }
+      if (fileData.lastOpenTime <= file.lastOpenTime) {
+        fileData = file;
+      }
+    });
+    if (fileData) {
+      AppContext.currentOpenFileId = fileData.id;
+      fileData.lastOpenTime = new Date().getTime();
+      AppContext.editorInstance.setValue(fileData.jsCode || "");
+    } else {
+      AppContext.currentOpenFileId = undefined;
+      AppContext.editorInstance.setValue("");
+    }
+    AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
     fileTitle.remove();
     return;
   }
   // 切换页签
-  // lodash.forEach(AppContext.openFileArray, (file, idTmp) => {
-  //   if (!file) return;
-  //   if (idTmp === id) {
-  //     file.active = true;
-  //   } else {
-  //     file.active = false;
-  //   }
-  // });
+  const fileData = AppContext.openFileArray.find(file => file.id === id);
+  if (fileData) {
+    AppContext.currentOpenFileId = fileData.id;
+    fileData.lastOpenTime = new Date().getTime();
+    AppContext.editorInstance.setValue(fileData.jsCode || "");
+  }
   const actives = $(".editor-container .editor-tools .open-file-tabs .file-title.active");
   actives.removeClass("active");
   fileTitle.toggleClass("active");
-  // console.log("fileTitle-->", fileTitle);
-  AppContext.editorInstance.setValue(AppContext.openFileArray[id].jsCode || "");
 });

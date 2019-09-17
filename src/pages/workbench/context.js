@@ -21,7 +21,9 @@ const AppContext = {
   // 编辑器实例
   editorInstance: undefined,
   // 已经打开的文件页签对象 id -> jsCodeFile(数据库数据) TODO 需要使用数组
-  openFileArray: {},
+  openFileArray: [],
+  // 当前打开的文件ID
+  currentOpenFileId: undefined,
 
   // ------------------------------------------------------------------------------------------------------------------------------------------ UI按钮组件
 

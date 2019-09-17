@@ -1,4 +1,4 @@
-import lodash from "lodash";
+// import lodash from "lodash";
 // import "jquery.fancytree/dist/skin-win8-n/ui.fancytree.less";
 import "./resource-manager.less";
 import "./resource-manager.scss";
@@ -175,24 +175,19 @@ AppContext.workspacePanel.tools.actions.refresh.on("click", () => reloadWorkspac
 // 打开代码页签
 const openFileTab = async (nodeData) => {
   // TODO 最多只能打开10个文件
-  lodash.forEach(AppContext.openFileArray, file => {
-    if (!file) return;
-    file.active = false;
-  });
-  let fileData;
-  fileData = AppContext.openFileArray[nodeData.dataId];
+  let fileData = AppContext.openFileArray.find(file => file.id === nodeData.dataId);
   if (fileData) {
-    fileData.active = true;
+    fileData.lastOpenTime = new Date().getTime();
   } else {
     fileData = await jsCodeFile(nodeData.dataId);
-    AppContext.openFileArray[fileData.id] = {
+    AppContext.openFileArray.push({
       ...fileData,
-      active: true,
       needSave: false,
-      // isLock: false,
-    };
+      lastOpenTime: new Date().getTime(),
+    });
   }
-  AppContext.editorTools.fileTabs.html(fileTabArt({ openFileArray: AppContext.openFileArray }));
+  AppContext.currentOpenFileId = fileData.id;
+  AppContext.editorTools.fileTabs.html(fileTabArt({ openFileArray: AppContext.openFileArray, currentOpenFileId: AppContext.currentOpenFileId }));
   // openFileArray
   AppContext.editorInstance.setValue(fileData.jsCode || "");
 };
