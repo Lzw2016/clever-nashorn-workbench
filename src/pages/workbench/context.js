@@ -1,3 +1,8 @@
+import lodash from "lodash";
+import fileTabArt from "./template/file-tab.art.html";
+import openedFileArt from "./template/opened-file.art.html";
+import fileFullPathArt from "./template/file-full-path.art.html";
+
 // 整个App的上下文管理
 const AppContext = {
   // ------------------------------------------------------------------------------------------------------------------------------------------ 全局数据
@@ -117,6 +122,87 @@ const AppContext = {
     clearLog: $(".v-console-tools .clear-log"),
     followLog: $(".v-console-tools .follow-log"),
   },
+};
+
+// ------------------------------------------------------------------------------------------------------------------------------------------ 根据状态刷新页面
+// 已打开的文件刷新
+// 1.编辑器
+//   保存当前编辑还未保存的文件
+//   编辑器内容、状态
+// 2.文件指示UI
+//   文件树节点定位
+//   文件页签定位
+//   已打开的文件列表（切换，新增，...）
+//   顶部文件路径
+// 3.工具栏
+//   调试方法下拉框
+AppContext.renderOpenFile = (
+  newOpenFileId,
+  {
+    treePosition = true,       // 文件树节点定位
+    fileTabsPosition = true,   // 文件页签定位
+    openedFilePosition = true, // 已打开的文件列表定位
+  }
+) => {
+  const { openFileArray, currentOpenFileId, editorInstance, workspaceTree } = AppContext;
+  let fileData;
+  // 保存当前编辑还未保存的文件
+  if (currentOpenFileId) {
+    fileData = AppContext.openFileArray.find(file => file.id === currentOpenFileId);
+    const newJsCode = editorInstance.getValue();
+    if (fileData && fileData.jsCode !== newJsCode && !(newJsCode === "" && !fileData.jsCode)) {
+      fileData.jsCode = newJsCode;
+      fileData.needSave = true;
+    }
+  }
+  fileData = undefined;
+  if (newOpenFileId) {
+    // 查找指定打开的文件ID
+    fileData = AppContext.openFileArray.find(file => file.id === newOpenFileId);
+  }
+  // 未找到 或者 不指定打开的文件ID - 就从 openFileArray 中选择最后一次打开的文件
+  if (!fileData) {
+    lodash.forEach(openFileArray, file => {
+      if (!fileData) {
+        fileData = file;
+        return;
+      }
+      if (fileData.lastOpenTime <= file.lastOpenTime) {
+        fileData = file;
+      }
+    });
+  }
+  if (!fileData) {
+    // 未找到文件 - 打开默认空白页
+    AppContext.currentOpenFileId = undefined;
+    AppContext.editorInstance.setValue("");
+    // 清除数据
+    fileData = { id: undefined, filePath: "", name: "" };
+  } else {
+    // 找到了文件 - 打开文件 - 编辑器内容、状态
+    AppContext.currentOpenFileId = fileData.id;
+    fileData.lastOpenTime = new Date().getTime();
+    AppContext.editorInstance.setValue(fileData.jsCode || "");
+  }
+  // 文件树节点定位
+  if (treePosition && fileData.id) {
+    workspaceTree.activateKey(fileData.id, { noEvents: true, noFocus: true });
+  }
+  // 文件页签定位
+  const dataTmp1 = { openFileArray: openFileArray, currentOpenFileId: fileData.id };
+  if (fileTabsPosition) {
+    AppContext.editorTools.fileTabs.html(fileTabArt(dataTmp1));
+  }
+  // 已打开的文件列表
+  const dataTmp2 = dataTmp1;
+  if (openedFilePosition) {
+    AppContext.openedFile.openedFileContent.html(openedFileArt(dataTmp2));
+  }
+  // 顶部文件路径
+  const fullPath = fileData.filePath + fileData.name;
+  const paths = fullPath.split("/").filter(path => path && path.length > 0);
+  AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
+  // 调试方法下拉框
 };
 
 window.AppContext = AppContext;

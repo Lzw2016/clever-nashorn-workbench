@@ -68,6 +68,7 @@ module.exports = {
     "no-new": 0,
     "comma-dangle": 0,
     "require-atomic-updates": 0,
+    "no-multi-spaces": 0,
     // 引入 ant-design-pro 项目的规则
     // 'import/no-cycle': 0,
     // 'jsx-a11y/no-noninteractive-element-interactions': 0,

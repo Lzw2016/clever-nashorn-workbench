@@ -10,3 +10,8 @@ export async function tree(bizType = "default", groupName = "default") {
 export async function jsCodeFile(id) {
   return http.get(`/api/js_code_file/${id}`);
 }
+
+// 新增文件或者文件夹
+export async function add(filedata) {
+  return http.post(`/api/js_code_file/add`, filedata);
+}
