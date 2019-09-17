@@ -209,7 +209,7 @@ AppContext.renderOpenFile = (
 // 1.需要保存UI状态指示
 // 2.调试方法下拉框
 AppContext.fileContentChange = () => {
-  console.log("fileContentChange");
+  // console.log("fileContentChange");
   const { openFileArray, currentOpenFileId } = AppContext;
   const fileData = openFileArray.find(file => file.id === currentOpenFileId);
   if (!fileData) {
