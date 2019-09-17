@@ -148,7 +148,7 @@ AppContext.renderOpenFile = (
   let fileData;
   // 保存当前编辑还未保存的文件
   if (currentOpenFileId) {
-    fileData = AppContext.openFileArray.find(file => file.id === currentOpenFileId);
+    fileData = openFileArray.find(file => file.id === currentOpenFileId);
     const newJsCode = editorInstance.getValue();
     if (fileData && fileData.jsCode !== newJsCode && !(newJsCode === "" && !fileData.jsCode)) {
       fileData.jsCode = newJsCode;
@@ -158,7 +158,7 @@ AppContext.renderOpenFile = (
   fileData = undefined;
   if (newOpenFileId) {
     // 查找指定打开的文件ID
-    fileData = AppContext.openFileArray.find(file => file.id === newOpenFileId);
+    fileData = openFileArray.find(file => file.id === newOpenFileId);
   }
   // 未找到 或者 不指定打开的文件ID - 就从 openFileArray 中选择最后一次打开的文件
   if (!fileData) {
@@ -203,6 +203,33 @@ AppContext.renderOpenFile = (
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
   // 调试方法下拉框
+};
+
+// 文件内容变化
+// 1.需要保存UI状态指示
+// 2.调试方法下拉框
+AppContext.fileContentChange = () => {
+  console.log("fileContentChange");
+  const { openFileArray, currentOpenFileId } = AppContext;
+  const fileData = openFileArray.find(file => file.id === currentOpenFileId);
+  if (!fileData) {
+    return;
+  }
+  const newJsCode = AppContext.editorInstance.getValue();
+  if (fileData.needSave) {
+    fileData.jsCode = newJsCode;
+    return;
+  }
+  if (fileData.jsCode !== newJsCode && !(newJsCode === "" && !fileData.jsCode)) {
+    fileData.jsCode = newJsCode;
+    fileData.needSave = true;
+  }
+  // 文件页签定位
+  const dataTmp1 = { openFileArray: openFileArray, currentOpenFileId: fileData.id };
+  AppContext.editorTools.fileTabs.html(fileTabArt(dataTmp1));
+  // 已打开的文件列表
+  const dataTmp2 = dataTmp1;
+  AppContext.openedFile.openedFileContent.html(openedFileArt(dataTmp2));
 };
 
 window.AppContext = AppContext;

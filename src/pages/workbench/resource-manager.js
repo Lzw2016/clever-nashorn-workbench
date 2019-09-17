@@ -4,7 +4,9 @@ import "./resource-manager.less";
 import "./resource-manager.scss";
 import { createTree } from "jquery.fancytree";
 import 'jquery.fancytree/dist/modules/jquery.fancytree.edit';
-import 'jquery.fancytree/dist/modules/jquery.fancytree.filter';
+import 'jquery.fancytree/dist/modules/jquery.fancytree.dnd5';
+// import 'jquery.fancytree/dist/modules/jquery.fancytree.filter';
+import '@/../public/js/jquery.fancytree/jquery.fancytree.contextMenu';
 import 'simplebar/dist/simplebar.css';
 import SimpleBar from 'simplebar/dist/simplebar.js';
 import AppContext from "./context";
@@ -46,7 +48,7 @@ const transformTreeNode = (nodeArray = []) => {
 
 // 工作空间树全局配置
 const treeConfig = {
-  extensions: ['edit', 'filter'],
+  extensions: ['edit', 'contextMenu', "dnd5"],
   treeId: "WorkspaceTree",
   activeVisible: true,            // 确保活动节点是可见的(展开)
   aria: true,                     // 启用WAI-ARIA支持
@@ -91,6 +93,7 @@ const treeConfig = {
     // console.log("click-data", data.node);
     openFileTab(data.node.data);
   },
+  // 编辑器器插件
   edit: {
     // triggerStart: ["dblclick"], // clickActive
     // beforeEdit: function (event, data) {
@@ -124,6 +127,34 @@ const treeConfig = {
     },
     close: function (event, data) {
       console.log("edit - close", data);
+    }
+  },
+  // 右键菜单
+  contextMenu: {
+    menu: {
+      createFile: { name: "新增文件", icon: "context-menu-create-file" },
+      createFolder: { name: "新增文件夹", icon: "context-menu-create-folder" },
+      copyFileName: { name: "复制文件名", icon: "context-menu-copy-file-name" },
+      copyFullPath: { name: "复制全路径", icon: "context-menu-copy-full-path" },
+      sep1: "---------",
+      delete: { name: "删除", icon: "context-menu-delete" },
+      rename: { name: "重命名", icon: "context-menu-rename" },
+    },
+    actions: function (node, action, options) {
+      if (action === "createFile") {
+        createFileOrFolder(false, node);
+      } else if (action === "createFolder") {
+        createFileOrFolder(true, node);
+      } else if (action === "copyFileName") {
+        console.log("copyFileName", node.data.name);
+      } else if (action === "copyFullPath") {
+        console.log("copyFullPath", node.data.fullPath);
+      } else if (action === "delete") {
+        // console.log("delete", node.data.dataId);
+        node.remove();
+      } else if (action === "rename") {
+        node.editStart();
+      }
     }
   },
 };
@@ -201,8 +232,11 @@ const positionFileForWorkspaceTree = () => {
 AppContext.workspacePanel.tools.actions.positionFile.on("click", () => positionFileForWorkspaceTree());
 
 // 新增文件 / 新增文件夹
-const createFileOrFolder = (folder) => {
-  const node = AppContext.workspaceTree.getActiveNode();
+const createFileOrFolder = (folder, nodeParam) => {
+  let node = nodeParam;
+  if (!node) {
+    node = AppContext.workspaceTree.getActiveNode();
+  }
   const newNode = {
     folder: false,
     title: "new-file.js",

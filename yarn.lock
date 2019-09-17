@@ -4838,10 +4838,10 @@ jquery-hotkeys@^0.2.2:
   resolved "https://registry.npm.taobao.org/jquery-hotkeys/download/jquery-hotkeys-0.2.2.tgz#69a8fc921596c8bde842d461070380006b3c30c4"
   integrity sha1-aaj8khWWyL3oQtRhBwOAAGs8MMQ=
 
-jquery.fancytree@^2.31.0:
-  version "2.31.0"
-  resolved "https://registry.npm.taobao.org/jquery.fancytree/download/jquery.fancytree-2.31.0.tgz#47e157761b0df826570c74297b1091849b227baf"
-  integrity sha1-R+FXdhsN+CZXDHQpexCRhJsie68=
+jquery.fancytree@^2.32.0:
+  version "2.32.0"
+  resolved "https://registry.npm.taobao.org/jquery.fancytree/download/jquery.fancytree-2.32.0.tgz#642cf3b1811a671bb9b85d3230600416270be361"
+  integrity sha1-ZCzzsYEaZxu5uF0yMGAEFicL42E=
   dependencies:
     jquery "^3.4.1"
 

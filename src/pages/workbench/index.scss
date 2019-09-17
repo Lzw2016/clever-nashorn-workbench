@@ -830,25 +830,25 @@ body {
   width: calc(100% - 24px) !important;
   .open-file-full-path {
     display: inline-block;
-    vertical-align: bottom;
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     color: rgba(204, 204, 204, 0.8);
     .workspace-title {
-      font-size: 17px;
-      font-weight: normal;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 450;
     }
     .file-full-path-title {
+      display: inline-block;
       margin-left: 16px;
       font-size: 0;
-      vertical-align: bottom;
       .path-title {
         cursor: pointer;
         display: inline-block;
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 15px;
+        font-weight: 450;
         &:hover {
           color: rgba(255, 255, 255, 0.9);
         }
@@ -856,11 +856,10 @@ body {
       .path-separate {
         display: inline-block;
         width: 16px;
-        height: 16px;
+        height: 12px;
         background-position-x: 50%;
         background-repeat: no-repeat;
         background-size: 14px;
-        vertical-align: bottom;
         background-image: url(../../assets/images/vscode-icons/dark/chevron-right.svg);
       }
     }

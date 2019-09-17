@@ -93,6 +93,8 @@ $(document).ready(function () {
     keyMapBinding(monaco);
     AppContext.editorInstance = editorInstance;
     AppContext.monaco = monaco;
+    // editorInstance.onDidChangeModelContent(e => console.log(e));
+    editorInstance.onDidChangeModelContent(lodash.debounce(AppContext.fileContentChange, 100, { maxWait: 350 }));
   });
 
   // 大小发生变化

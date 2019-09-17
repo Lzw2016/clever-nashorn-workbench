@@ -1,0 +1,18 @@
+ul.context-menu-list {
+  color: rgb(204, 204, 204);
+  background-color: rgb(37, 37, 38);
+  // border: 1px solid #bebebe;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,.5);
+  li {
+    color: rgb(204, 204, 204);
+    background-color: rgb(37, 37, 38);
+  }
+  .context-menu-separator {
+    border-bottom: 1px solid rgb(97, 97, 98);
+  }
+  .context-menu-item.context-menu-hover {
+    color: #fff;
+    background-color: rgb(9, 71, 113);
+  }
+}
