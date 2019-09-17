@@ -1,0 +1,8 @@
+{{set fullPath = ''}}
+{{each paths path index}}
+{{ fullPath = fullPath + '/' + path }}
+<span class="path-title" data-fullPath="{{ fullPath }}">{{ path }}</span>
+{{if index < paths.length-1}}
+<span class="path-separate"></span>
+{{/if}}
+{{/each}}

@@ -8,10 +8,11 @@ import 'jquery.fancytree/dist/modules/jquery.fancytree.filter';
 import 'simplebar/dist/simplebar.css';
 import SimpleBar from 'simplebar/dist/simplebar.js';
 import AppContext from "./context";
-// import Browser from "@/utils/browser";
+import Browser from "@/utils/browser";
 import { tree, jsCodeFile } from "@/api/js-code-file-controller";
 import fileTabArt from "./template/file-tab.art.html";
 import openedFileArt from "./template/opened-file.art.html";
+import fileFullPathArt from "./template/file-full-path.art.html";
 
 // 转换树节点
 const transformTreeNode = (nodeArray = []) => {
@@ -156,13 +157,16 @@ const initWorkspaceTree = async () => {
 $(document).ready(() => {
   initWorkspaceTree();
   AppContext.workspacePanel.tools.title.html(`${AppContext.bizType}-${AppContext.groupName}`);
-  new SimpleBar(
-    document.querySelector('.workbench-container .container-left .opened-file .panel-content'),
-    {
-      autoHide: true,
-      scrollbarMinSize: 35,
-    }
-  );
+  AppContext.workbenchHeaderTools.openFileFullPath.workspaceTitle.html(`[${AppContext.bizType}-${AppContext.groupName}]`);
+  if (Browser.client.name !== "Chrome") {
+    new SimpleBar(
+      document.querySelector('.workbench-container .container-left .opened-file .panel-content'),
+      {
+        autoHide: true,
+        scrollbarMinSize: 35,
+      }
+    );
+  }
 });
 
 // 重新加载工作空间树
@@ -172,6 +176,7 @@ const reloadWorkspaceTree = async () => {
   }
   // const oldData = AppContext.workspaceTree.toDict(false);
   AppContext.workspacePanel.tools.title.html(`${AppContext.bizType}-${AppContext.groupName}`);
+  AppContext.workbenchHeaderTools.openFileFullPath.workspaceTitle.html(`[${AppContext.bizType}-${AppContext.groupName}]`);
   const data = await tree(AppContext.bizType, AppContext.groupName);
   AppContext.workspaceTree.reload(data).done(() => {
     // 重新加载完成
@@ -197,5 +202,8 @@ const openFileTab = async (nodeData) => {
   AppContext.currentOpenFileId = fileData.id;
   AppContext.editorTools.fileTabs.html(fileTabArt({ openFileArray: AppContext.openFileArray, currentOpenFileId: AppContext.currentOpenFileId }));
   AppContext.openedFile.openedFileContent.html(openedFileArt({ openFileArray: AppContext.openFileArray, currentOpenFileId: AppContext.currentOpenFileId }));
+  const fullPath = fileData.filePath + fileData.name;
+  const paths = fullPath.split("/").filter(path => path && path.length > 0);
+  AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
   AppContext.editorInstance.setValue(fileData.jsCode || "");
 };

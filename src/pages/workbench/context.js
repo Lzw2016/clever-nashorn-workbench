@@ -32,6 +32,10 @@ const AppContext = {
 
   // workbench顶部工具栏
   workbenchHeaderTools: {
+    openFileFullPath: {
+      workspaceTitle: $(".open-file-full-path .workspace-title"),
+      fullPathTitle: $(".open-file-full-path .file-full-path-title"),
+    },
     console: $(".workbench-header-tools .console"),
   },
 
