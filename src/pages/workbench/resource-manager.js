@@ -11,6 +11,7 @@ import AppContext from "./context";
 // import Browser from "@/utils/browser";
 import { tree, jsCodeFile } from "@/api/js-code-file-controller";
 import fileTabArt from "./template/file-tab.art.html";
+import openedFileArt from "./template/opened-file.art.html";
 
 // 转换树节点
 const transformTreeNode = (nodeArray = []) => {
@@ -155,6 +156,13 @@ const initWorkspaceTree = async () => {
 $(document).ready(() => {
   initWorkspaceTree();
   AppContext.workspacePanel.tools.title.html(`${AppContext.bizType}-${AppContext.groupName}`);
+  new SimpleBar(
+    document.querySelector('.workbench-container .container-left .opened-file .panel-content'),
+    {
+      autoHide: true,
+      scrollbarMinSize: 35,
+    }
+  );
 });
 
 // 重新加载工作空间树
@@ -188,6 +196,6 @@ const openFileTab = async (nodeData) => {
   }
   AppContext.currentOpenFileId = fileData.id;
   AppContext.editorTools.fileTabs.html(fileTabArt({ openFileArray: AppContext.openFileArray, currentOpenFileId: AppContext.currentOpenFileId }));
-  // openFileArray
+  AppContext.openedFile.openedFileContent.html(openedFileArt({ openFileArray: AppContext.openFileArray, currentOpenFileId: AppContext.currentOpenFileId }));
   AppContext.editorInstance.setValue(fileData.jsCode || "");
 };

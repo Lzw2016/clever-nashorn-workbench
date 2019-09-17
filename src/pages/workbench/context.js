@@ -53,6 +53,7 @@ const AppContext = {
     },
     panelTools: $(".opened-file .panel-tools"),
     content: $(".opened-file .panel-content"),
+    openedFileContent: $("#opened-file-content"),
   },
 
   // workspace面板

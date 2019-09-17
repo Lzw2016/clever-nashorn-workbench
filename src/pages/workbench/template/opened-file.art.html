@@ -1,0 +1,10 @@
+{{each openFileArray file index}}
+{{if file}}
+<div class="file-title{{ file.id === currentOpenFileId ? ' active' : '' }}" title="{{ file.filePath }}{{file.name}}" data-id="{{ file.id }}">
+  <span class="file-close{{ file.needSave ? ' need-save' : '' }}" title="关闭"></span>
+  <span class="file-type file-type-{{ file.name.substr(file.name.lastIndexOf('.') + 1)  }}"></span>
+  <span class="file-name">{{ file.name }}</span>
+  <span class="file-full-path">{{ file.filePath }}{{file.name}}</span>
+</div>
+{{/if}}
+{{/each}}

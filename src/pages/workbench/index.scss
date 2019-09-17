@@ -387,8 +387,102 @@ body {
         }
       }
       .panel-content {
+        #opened-file-content {
+          // padding-bottom: 12px;
+          .file-title {
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 22px;
+            width: 100%;
+            color: rgba(204, 204, 204, 0.8);
+            background-color: rgb(37, 37, 38);
+            .file-close {
+              flex-shrink: 0;
+              display: inline-block;
+              width: 16px;
+              height: 16px;
+              margin: 0 5px 0 12px;
+              background-position: 50%;
+              background-repeat: no-repeat;
+              &:active {
+                background-size: 20px;
+              }
+              &.need-save {
+                background-image: url(../../assets/images/vscode-icons/dark/circle-filled.svg) !important;
+              }
+            }
+            .file-type {
+              flex-shrink: 0;
+              display: inline-block;
+              margin-right: 2px;
+              width: 16px;
+              height: 16px;
+              background-position: 50%;
+              background-repeat: no-repeat;
+              &.file-type-js {
+                background-image: url(../../assets/images/vscode-icons/folder-file-type/file_type_js.svg);
+              }
+              &.file-type-json {
+                background-image: url(../../assets/images/vscode-icons/folder-file-type/file_type_json.svg);
+              }
+            }
+            .file-name {
+              flex-shrink: 0;
+              display: inline-block;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              font-size: 13px;
+              font-weight: bold;
+              font-family:"Segoe WPC", "Segoe UI", "Microsoft YaHei", sans-serif;
+            }
+            .file-full-path {
+              flex-shrink: 2;
+              flex-grow: 2;
+              color: rgb(155, 156, 156);
+              margin-left: 8px;
+              display: inline-block;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              font-size: 13px;
+              font-weight: bold;
+              font-family:"Segoe WPC", "Segoe UI", "Microsoft YaHei", sans-serif;
+            }
+            &:hover {
+              background-color: rgb(42, 45, 46);
+              .file-close {
+                background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+              }
+            }
+            &.active {
+              color: rgb(233, 233, 233);
+              background-color: rgb(55, 55, 61);
+              .file-close {
+                background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+              }
+            }
+          }
+        }
         &.expanded {
-          max-height: 350px;
+          max-height: 280px !important;
+        }
+        .simplebar-track {
+          &.simplebar-vertical {
+            width: 10px;
+          }
+          .simplebar-scrollbar {
+            width: 10px;
+            right: 0;
+            &:before {
+              background-color: rgb(73, 75, 76);
+              color: rgb(73, 75, 76);
+              border-radius: 0;
+            }
+          }
         }
       }
     }
@@ -608,21 +702,6 @@ body {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
-    // &::-webkit-scrollbar{
-    //   height: 6px;
-    //   background-color: rgb(30, 30, 30);
-    // }
-    // &::-webkit-scrollbar-track{
-    //   background-color: rgb(30, 30, 30);
-    // }
-    // &::-webkit-scrollbar-thumb{
-    //   display: none;
-    //   background-color: rgb(66, 66, 66);
-    // }
-    // &:hover::-webkit-scrollbar-thumb {
-    //   display: block;
-    // }
-
     .file-title{
       cursor: pointer;
       display: inline-block;
@@ -666,6 +745,9 @@ body {
         background-position: 50%;
         background-repeat: no-repeat;
         vertical-align: bottom;
+        &:active {
+          background-size: 20px;
+        }
         &.need-save {
           background-image: url(../../assets/images/vscode-icons/dark/circle-filled.svg) !important;
         }
