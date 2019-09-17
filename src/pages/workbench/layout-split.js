@@ -145,3 +145,38 @@ AppContext.consoleTopTools.buttons.expandedFolded.on("click", () => {
     foldConsoleContainer();
   }
 });
+
+// 已打开的脚本
+AppContext.openedFile.panelTools.on("click", (e) => {
+  const target = $(e.target);
+  if (target.hasClass("button")) {
+    return;
+  }
+  AppContext.openedFile.panelTools.toggleClass("expanded");
+  AppContext.openedFile.content.toggleClass("expanded");
+});
+
+// 工作空间
+AppContext.workspacePanel.panelTools.on("click", (e) => {
+  const target = $(e.target);
+  if (target.hasClass("button")) {
+    return;
+  }
+  AppContext.workspacePanel.panelTools.toggleClass("expanded");
+  AppContext.workspacePanel.content.toggleClass("expanded");
+  if (AppContext.workspacePanel.content.hasClass("expanded")) {
+    AppContext.workspacePanel.root.css({ "flex-grow": 2 });
+  } else {
+    AppContext.workspacePanel.root.css({ "flex-grow": 0 });
+  }
+});
+
+// 切换工作空间
+AppContext.switchWorkspace.panelTools.on("click", (e) => {
+  const target = $(e.target);
+  if (target.hasClass("button")) {
+    return;
+  }
+  AppContext.switchWorkspace.panelTools.toggleClass("expanded");
+  AppContext.switchWorkspace.panelContent.toggleClass("expanded");
+});

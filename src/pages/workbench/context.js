@@ -51,6 +51,7 @@ const AppContext = {
         closeAll: $(".opened-file .panel-tools .actions .close-all"),
       },
     },
+    panelTools: $(".opened-file .panel-tools"),
     content: $(".opened-file .panel-content"),
   },
 
@@ -66,6 +67,8 @@ const AppContext = {
         collapseAll: $(".workspace .panel-tools .actions .collapse-all"),
       },
     },
+    root: $(".workbench-container .container-left .workspace"),
+    panelTools: $(".workspace .panel-tools"),
     content: $(".workspace .workspace-content"),
   },
 
@@ -77,6 +80,7 @@ const AppContext = {
         refresh: $(".switch-workspace .panel-tools .actions .refresh"),
       },
     },
+    panelTools: $(".switch-workspace .panel-tools"),
     panelContent: $(".switch-workspace .panel-content"),
     content: $("#switch-workspace-content"),
   },

@@ -302,7 +302,9 @@ body {
     }
 
     .panel-content {
+      display: none;
       &.expanded {
+        display: block;
         min-height: $panel-content-min-height;
       }
     }
@@ -382,6 +384,11 @@ body {
         }
         .close-all {
           background-image: url(../../assets/images/vscode-icons/dark/close-all.svg);
+        }
+      }
+      .panel-content {
+        &.expanded {
+          max-height: 350px;
         }
       }
     }
@@ -706,6 +713,9 @@ body {
     }
     .lock-file {
       background-image: url(../../assets/images/vscode-icons/dark/lock.svg);
+      &.unlock {
+        background-image: url(../../assets/images/vscode-icons/dark/unlock.svg);
+      }
     }
     .save-file {
       background-image: url(../../assets/images/vscode-icons/dark/save.svg);

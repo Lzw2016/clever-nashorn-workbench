@@ -53,7 +53,7 @@ const treeConfig = {
   autoActivate: true, // 当节点使用键盘聚焦时自动激活该节点
   autoCollapse: false, // 在展开节点时自动折叠所有兄弟节点
   autoScroll: false, // 自动将节点滚动到可见区域
-  clickFolderMode: 4, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expand)
+  clickFolderMode: 2, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expand)
   checkbox: false, // Show复选框
   checkboxAutoHide: undefined, // 只在悬停时显示复选框
   debugLevel: 0, // 0:安静，1:错误，2:警告，3:信息，4:调试

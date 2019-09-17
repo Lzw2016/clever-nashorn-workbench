@@ -72,7 +72,13 @@
             </span>
           </div>
           <div class="panel-content expanded">
-            <div id="opened-file-content"></div>
+            <div id="opened-file-content">
+              <div class="file-title active">
+                <span class="file-close need-save" title="关闭"></span>
+                <span class="file-type file-type-js"></span>
+                <span class="file-name">index1.js</span>
+              </div>
+            </div>
           </div>
         </div>
         <!-- 当前打开的工作空间面板(workspace-content) -->
@@ -119,7 +125,7 @@
             </div>
             <div class="editor-tools-buttons">
               <div class="button save-file" title="保存文件"></div>
-              <div class="button lock-file" title="设置为只读"></div>
+              <div class="button lock-file unlock" title="设置为只读"></div>
               <div class="button delete-file" title="删除文件"></div>
               <!-- <div class="button close-all-file" title="关闭所有"></div> -->
             </div>
@@ -151,10 +157,10 @@
           <!-- debug日志 -->
           <div class="v-console-container">
             <div class="v-console-tools">
-              <!-- 跟随日志滚动 -->
-              <div class="button follow-log" title="跟随滚动"></div>
               <!-- 清除日志 -->
               <div class="button clear-log" title="清除日志"></div>
+              <!-- 跟随日志滚动 -->
+              <div class="button follow-log" title="跟随滚动"></div>
               <!-- 断开连接 -->
               <!-- <div class="button disconnect" title="断开日志"></div> -->
             </div>
