@@ -30,17 +30,30 @@ ul.context-menu-list {
   .context-menu-icon-context-menu-create-folder {
     background-image: url(../../assets/images/vscode-icons/dark/new-folder.svg);
   }
-  // .context-menu-icon-context-menu-copy-file-name {
-  //   background-image: url(../../assets/images/vscode-icons/dark/);
-  // }
-  // .context-menu-icon-context-menu-copy-full-path {
-  //   background-image: url(../../assets/images/vscode-icons/dark/);
-  // }
+  .context-menu-icon-context-menu-copy-file-name {
+    background-image: url(../../assets/images/copy.svg);
+  }
+  .context-menu-icon-context-menu-copy-full-path {
+    background-image: url(../../assets/images/copy.svg);
+  }
   .context-menu-icon-context-menu-delete {
     background-image: url(../../assets/images/vscode-icons/dark/trash.svg);
   }
   .context-menu-icon-context-menu-rename {
     background-image: url(../../assets/images/vscode-icons/dark/edit.svg);
+  }
+
+  .context-menu-icon-context-menu-close-other {
+    background-image: url(../../assets/images/vscode-icons/dark/close.svg);
+  }
+  .context-menu-icon-context-menu-close-right {
+    background-image: url(../../assets/images/vscode-icons/dark/arrow-right.svg);
+  }
+  .context-menu-icon-context-menu-close-left {
+    background-image: url(../../assets/images/vscode-icons/dark/arrow-left.svg);
+  }
+  .context-menu-icon-context-menu-close-all {
+    background-image: url(../../assets/images/vscode-icons/dark/close-all.svg);
   }
 }
 

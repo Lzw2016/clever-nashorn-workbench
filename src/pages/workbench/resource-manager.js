@@ -1,5 +1,6 @@
 // import lodash from "lodash";
 // import "jquery.fancytree/dist/skin-win8-n/ui.fancytree.less";
+import copy from 'copy-to-clipboard';
 import "./resource-manager.less";
 import "./resource-manager.scss";
 import { createTree } from "jquery.fancytree";
@@ -147,9 +148,9 @@ const treeConfig = {
       } else if (action === "createFolder") {
         createFileOrFolder(true, node);
       } else if (action === "copyFileName") {
-        console.log("copyFileName", node.data.name);
+        copy(node.data.name, { format: "text/plain" });
       } else if (action === "copyFullPath") {
-        console.log("copyFullPath", node.data.fullPath);
+        copy(node.data.fullPath, { format: "text/plain" });
       } else if (action === "delete") {
         // console.log("delete", node.data.dataId);
         node.remove();

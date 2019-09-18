@@ -22,6 +22,7 @@
         node.setActive(true);
 
         $.contextMenu({
+          // autoHide: true,
           selector: "." + selector,
           events: {
             show: function (options) {
