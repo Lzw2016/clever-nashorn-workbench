@@ -131,6 +131,7 @@ const treeConfig = {
   },
   // 右键菜单
   contextMenu: {
+    selector: "fancytree-node",
     menu: {
       createFile: { name: "新增文件", icon: "context-menu-create-file" },
       createFolder: { name: "新增文件夹", icon: "context-menu-create-folder" },

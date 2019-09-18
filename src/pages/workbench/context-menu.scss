@@ -1,9 +1,10 @@
 ul.context-menu-list {
   color: rgb(204, 204, 204);
   background-color: rgb(37, 37, 38);
-  // border: 1px solid #bebebe;
+  border: 1px solid rgb(19, 19, 19);;
   border: none;
-  box-shadow: 0 2px 5px rgba(0,0,0,.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+  padding: 6px 6px;
   li {
     color: rgb(204, 204, 204);
     background-color: rgb(37, 37, 38);
@@ -15,4 +16,31 @@ ul.context-menu-list {
     color: #fff;
     background-color: rgb(9, 71, 113);
   }
+  .context-menu-item {
+    margin: 6px 0;
+  }
+  .context-menu-icon {
+    background-position-x: 6px;
+    background-position-y: 3px;
+    background-repeat: no-repeat;
+  }
+  .context-menu-icon-context-menu-create-file {
+    background-image: url(../../assets/images/vscode-icons/dark/new-file.svg);
+  }
+  .context-menu-icon-context-menu-create-folder {
+    background-image: url(../../assets/images/vscode-icons/dark/new-folder.svg);
+  }
+  // .context-menu-icon-context-menu-copy-file-name {
+  //   background-image: url(../../assets/images/vscode-icons/dark/);
+  // }
+  // .context-menu-icon-context-menu-copy-full-path {
+  //   background-image: url(../../assets/images/vscode-icons/dark/);
+  // }
+  .context-menu-icon-context-menu-delete {
+    background-image: url(../../assets/images/vscode-icons/dark/trash.svg);
+  }
+  .context-menu-icon-context-menu-rename {
+    background-image: url(../../assets/images/vscode-icons/dark/edit.svg);
+  }
 }
+
