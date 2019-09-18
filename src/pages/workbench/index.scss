@@ -9,7 +9,7 @@ nav {
 //------------------------------------------------------------------------------------------------------------------------------------------- 全局变量
 $workbench-header-height: 30px;
 $workbench-footer-height: 22px;
-$body-background-color: #252526;
+$body-background-color: rgb(30, 30, 30);
 $body-font-family: Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif;
 $body-font-size: 11px;
 $tools-background-color: rgba(128, 128, 128, 0.2);
@@ -172,10 +172,12 @@ body {
     // 左边/中间 - 调节div
     .gutter.gutter-horizontal {
       float: left;
-      margin-top: $editor-tools-height;
-      height: calc(100% - #{$editor-tools-height});
+      // margin-top: $editor-tools-height;
+      // height: calc(100% - #{$editor-tools-height});
+      height: 100%;
       background-color: $gutter-background-color;
       cursor: ew-resize;
+      // box-shadow: 0 1px 2px rgb(0, 0, 0);
     }
 
     // 中间
@@ -187,14 +189,20 @@ body {
       // 编辑器区
       .editor-container {
         width: 100%;
-
+        color: $title-color;
+        .page-content {
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          padding-top: 210px;
+          font-size: 26px;
+        }
         // 编辑文件页签-工具栏
         .editor-tools {
           height: $editor-tools-height;
           background-color: $editor-tools-background-color;
           border-bottom: 1px solid rgb(68, 68, 68);
         }
-
         // 编辑器实例
         .editor-instance {
           width: 100%;

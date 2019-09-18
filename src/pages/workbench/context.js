@@ -55,6 +55,12 @@ const AppContext = {
     }
   },
 
+  // workbench中间
+  workbenchContainerCenter: {
+    centerPage: $("#container-center-page"),
+    centerEditor: $("#container-center-editor"),
+  },
+
   // 已打开的文件
   openedFile: {
     tools: {
@@ -183,12 +189,14 @@ AppContext.renderOpenFile = (
     });
   }
   if (!fileData) {
+    AppContext.showContainerCenter(false);
     // 未找到文件 - 打开默认空白页
     AppContext.currentOpenFileId = undefined;
     editorInstance.setValue("");
-    // 清除数据
+    // 适配fileData熟悉
     fileData = { id: undefined, filePath: "", name: "" };
   } else {
+    AppContext.showContainerCenter(true);
     // 找到了文件 - 打开文件 - 编辑器内容、状态
     AppContext.currentOpenFileId = fileData.id;
     fileData.lastOpenTime = new Date().getTime();
@@ -252,6 +260,31 @@ AppContext.fileContentChange = () => {
   // 已打开的文件列表
   const dataTmp2 = dataTmp1;
   AppContext.openedFile.openedFileContent.html(openedFileArt(dataTmp2));
+};
+
+// 显示中间编辑器
+AppContext.showContainerCenter = (editor = true) => {
+  const { workbenchContainerCenter: { centerPage, centerEditor }, editorInstance } = AppContext;
+  if (editor) {
+    if (centerEditor.hasClass("editor-container")) {
+      return;
+    }
+    const styleRaw = centerPage.attr("style");
+    centerPage.attr("style", "display: none;");
+    centerPage.removeClass("editor-container");
+    centerEditor.addClass("editor-container");
+    centerEditor.attr("style", styleRaw);
+    editorInstance.layout();
+    return;
+  }
+  if (centerPage.hasClass("editor-container")) {
+    return;
+  }
+  const styleRaw = centerEditor.attr("style");
+  centerEditor.attr("style", "display: none;");
+  centerEditor.removeClass("editor-container");
+  centerPage.addClass("editor-container");
+  centerPage.attr("style", styleRaw);
 };
 
 window.AppContext = AppContext;
