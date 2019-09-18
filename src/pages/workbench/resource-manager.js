@@ -209,18 +209,24 @@ const reloadWorkspaceTree = async () => {
 AppContext.workspacePanel.tools.actions.refresh.on("click", () => reloadWorkspaceTree());
 
 // 打开代码页签
+let openFileTabLock = false;
 const openFileTab = async (nodeData) => {
-  // TODO 最多只能打开10个文件
-  let fileData = AppContext.openFileArray.find(file => file.id === nodeData.dataId);
-  if (!fileData) {
-    fileData = await jsCodeFile(nodeData.dataId);
-    AppContext.openFileArray.push({
-      ...fileData,
-      needSave: false,
-      lastOpenTime: new Date().getTime(),
-    });
+  if (openFileTabLock) {
+    return;
   }
-  AppContext.renderOpenFile(fileData.id, { treePosition: false });
+  // TODO 最多只能打开10个文件
+  try {
+    openFileTabLock = true;
+    let fileData = AppContext.openFileArray.find(file => file.id === nodeData.dataId);
+    if (!fileData) {
+      fileData = await jsCodeFile(nodeData.dataId);
+      AppContext.openFileArray.push({ ...fileData, needSave: false, lastOpenTime: new Date().getTime() });
+    }
+    AppContext.renderOpenFile(fileData.id, { treePosition: false });
+  } catch (error) {
+    openFileTabLock = false;
+  }
+  openFileTabLock = false;
 };
 
 // 定位文件树位置
