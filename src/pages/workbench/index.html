@@ -108,14 +108,13 @@
         </div>
       </div>
       <div class="container-center">
-        <div id="container-center-page" class="editor-container">
-          <div class="page-content">
-            在线开发平台，使用JavaScript语言
+        <div class="editor-container">
+          <!-- 未打开编辑器显示的页面 -->
+          <div id="container-center-page" class="page-content">
+            <!-- 在线开发平台，使用JavaScript语言 -->
           </div>
-        </div>
-        <div id="container-center-editor" style="display: none;">
           <!-- 编辑文件页签-工具栏 -->
-          <div class="editor-tools">
+          <div class="editor-tools" style="display: none;">
             <div class="open-file-tabs">
               <!--
               <div class="file-title active">
@@ -133,7 +132,7 @@
             </div>
           </div>
           <!-- 编辑器实例 -->
-          <div id="monaco-editor-instance" class="editor-instance"></div>
+          <div id="monaco-editor-instance" class="editor-instance" style="display: none;"></div>
         </div>
         <div class="console-container">
           <!-- 控制台顶部工具栏 -->

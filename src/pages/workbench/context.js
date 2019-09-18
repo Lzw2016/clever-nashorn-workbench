@@ -55,12 +55,6 @@ const AppContext = {
     }
   },
 
-  // workbench中间
-  workbenchContainerCenter: {
-    centerPage: $("#container-center-page"),
-    centerEditor: $("#container-center-editor"),
-  },
-
   // 已打开的文件
   openedFile: {
     tools: {
@@ -103,6 +97,13 @@ const AppContext = {
     panelTools: $(".switch-workspace .panel-tools"),
     panelContent: $(".switch-workspace .panel-content"),
     content: $("#switch-workspace-content"),
+  },
+
+  // 编辑器容器
+  editorContainer: {
+    centerPage: $("#container-center-page"),
+    editorTools: $(".editor-container .editor-tools"),
+    editorInstance: $(".editor-container .editor-instance"),
   },
 
   // 编辑器工具栏
@@ -264,27 +265,23 @@ AppContext.fileContentChange = () => {
 
 // 显示中间编辑器
 AppContext.showContainerCenter = (editor = true) => {
-  const { workbenchContainerCenter: { centerPage, centerEditor }, editorInstance } = AppContext;
+  const { editorContainer: { centerPage, editorTools, editorInstance } } = AppContext;
   if (editor) {
-    if (centerEditor.hasClass("editor-container")) {
+    if (editorTools.css("display") !== "none") {
       return;
     }
-    const styleRaw = centerPage.attr("style");
-    centerPage.attr("style", "display: none;");
-    centerPage.removeClass("editor-container");
-    centerEditor.addClass("editor-container");
-    centerEditor.attr("style", styleRaw);
-    editorInstance.layout();
+    centerPage.hide();
+    editorTools.show();
+    editorInstance.show();
+    AppContext.editorInstance.layout();
     return;
   }
-  if (centerPage.hasClass("editor-container")) {
+  if (centerPage.css("display") !== "none") {
     return;
   }
-  const styleRaw = centerEditor.attr("style");
-  centerEditor.attr("style", "display: none;");
-  centerEditor.removeClass("editor-container");
-  centerPage.addClass("editor-container");
-  centerPage.attr("style", styleRaw);
+  editorTools.hide();
+  editorInstance.hide();
+  centerPage.show();
 };
 
 window.AppContext = AppContext;

@@ -271,3 +271,20 @@ const collapseAllWorkspaceTree = () => {
   AppContext.workspaceTree.expandAll(false, { noAnimation: false, noEvents: true });
 };
 AppContext.workspacePanel.tools.actions.collapseAll.on("click", () => collapseAllWorkspaceTree());
+
+// 保存所有文件
+AppContext.openedFile.tools.actions.saveAll.on("click", () => {
+  const needSaveArray = AppContext.openFileArray.filter(file => file.needSave);
+  console.log("保存所有文件", needSaveArray.length);
+  AppContext.renderOpenFile(null, { treePosition: false });
+});
+// 关闭所有文件
+AppContext.openedFile.tools.actions.closeAll.on("click", () => {
+  const needSaveArray = AppContext.openFileArray.filter(file => file.needSave);
+  if (needSaveArray.length > 0) {
+    console.log("需要保存", needSaveArray.length);
+  }
+  AppContext.openFileArray = [];
+  AppContext.renderOpenFile(undefined, { treePosition: false });
+  console.log("关闭所有文件");
+});

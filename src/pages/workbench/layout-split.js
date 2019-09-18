@@ -28,9 +28,9 @@ AppContext.leftCenterLayout = Split(['.container-left', '.container-center'], {
 // 布局处理 - 编辑器和控制台
 AppContext.editorConsoleLayout = Split(['.editor-container', '.console-container'], {
   direction: 'vertical',
-  sizes: [57, 43],
+  sizes: [65, 35],
   // sizes: ['calc(100% - 360px)', '356px'],
-  minSize: [160, 48],
+  minSize: [160, 128],
   gutterSize: 5,
   cursor: 'ns-resize',
   onDrag: () => layoutDebounce(),

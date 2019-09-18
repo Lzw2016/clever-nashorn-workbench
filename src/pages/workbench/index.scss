@@ -190,9 +190,9 @@ body {
       .editor-container {
         width: 100%;
         color: $title-color;
+        // 未打开编辑器显示的页面
         .page-content {
           width: 100%;
-          height: 100%;
           text-align: center;
           padding-top: 210px;
           font-size: 26px;
@@ -387,7 +387,7 @@ body {
       .panel-tools .actions {
         .save-all {
           background-image: url(../../assets/images/vscode-icons/dark/save-all.svg);
-          opacity: 0.4;
+          // opacity: 0.4;
           cursor: default;
         }
         .close-all {
@@ -625,7 +625,6 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-
     .button {
       cursor: pointer;
       display: inline-block;
@@ -640,7 +639,6 @@ body {
         background-size: 18px;
       }
     }
-
     .console-top-expanded-folded {
       background-image: url(../../assets/images/vscode-icons/dark/chevron-up.svg);
       &.expanded {
