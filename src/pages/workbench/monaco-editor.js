@@ -61,6 +61,29 @@ $(document).ready(function () {
     // monaco.languages.register({id: 'nashorn-js'});
     // monaco.languages.setMonarchTokensProvider('nashorn-js', nashornJS);
     // 属性配置 https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditorconstructionoptions.html
+    // validation settings(验证配置)
+    // monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    //   noSemanticValidation: true,
+    //   noSyntaxValidation: false
+    // });
+    // compiler options(编译配置) https://microsoft.github.io/monaco-editor/api/interfaces/monaco.languages.typescript.compileroptions.html#module
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+      ...monaco.languages.typescript.javascriptDefaults.getCompilerOptions(),
+      target: monaco.languages.typescript.ScriptTarget.ES5,
+      allowNonTsExtensions: true,
+      noLib: false,
+    });
+    // extra libraries(配置扩展的库)
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      `
+        var console = {};
+        console.debug = function() {};
+        console.info = function() {};
+        console.log = function() {};
+        console.warn = function() {};
+        console.error = function() {};
+      `
+    );
     const options = {
       width: "100%",
       height: "100%",
