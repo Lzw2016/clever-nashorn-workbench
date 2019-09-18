@@ -297,18 +297,16 @@ AppContext.parseDebugMethods = (jsCode) => {
   try {
     ast = esprima.parseScript(jsCode, {
       jsx: false,
-      range: false, // true
-      loc: false, // true
+      range: false,       // true
+      loc: false,         // true
       tolerant: false,
       tokens: false,
-      comment: false, // true
+      comment: false,     // true
     });
   } catch (error) {
     // 清空 methods
     return;
   }
-  console.log("ast-->", ast);
-
   // const astTmp = espree.parse(jsCode, { sourceType: "script", ecmaVersion: 6 });
   // const scopeManager = eslintScope.analyze(astTmp);
   // console.log("scopeManager--->", scopeManager);
@@ -320,7 +318,8 @@ AppContext.parseDebugMethods = (jsCode) => {
   const methods = [];
   estraverse.traverse(ast, {
     enter: function (node) {
-      console.log("node--->", node);
+      // console.log("node--->", node);
+
       // exports.test1 = function() {};
       // var test2 = function() {};
       // exports.test2 = test2;
@@ -336,6 +335,7 @@ AppContext.parseDebugMethods = (jsCode) => {
         ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
       ) {
         methods.push(node.left.property.name);
+        return;
       }
       // module.exports.test4 = function() {};
       // var test5 = function() {};
@@ -355,6 +355,7 @@ AppContext.parseDebugMethods = (jsCode) => {
         ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
       ) {
         methods.push(node.left.property.name);
+        return;
       }
       // exports = {
       //   test7: function() {},
@@ -372,6 +373,7 @@ AppContext.parseDebugMethods = (jsCode) => {
             methods.push(property.key.name);
           }
         });
+        return;
       }
       // module.exports = {
       //   test8: function() {},
