@@ -93,6 +93,7 @@ $(document).ready(function () {
     keyMapBinding(monaco);
     AppContext.editorInstance = editorInstance;
     AppContext.monaco = monaco;
+    AppContext.initEditorViewState = editorInstance.saveViewState();
     // editorInstance.onDidChangeModelContent(e => console.log(e));
     editorInstance.onDidChangeModelContent(lodash.debounce(AppContext.fileContentChange, 100, { maxWait: 350 }));
   });

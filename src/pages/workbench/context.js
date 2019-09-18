@@ -25,7 +25,11 @@ const AppContext = {
   monaco: undefined,
   // 编辑器实例
   editorInstance: undefined,
-  // 已经打开的文件页签对象 id -> jsCodeFile(数据库数据) TODO 需要使用数组
+  // 编辑器ViewState状态缓存 id -> ViewState(编辑器状态)
+  editorViewStateMap: {},
+  // 初始化的编辑器状态
+  initEditorViewState: undefined,
+  // 已经打开的文件页签对象 jsCodeFile(数据库数据)
   openFileArray: [],
   // 当前打开的文件ID
   currentOpenFileId: undefined,
@@ -144,7 +148,11 @@ AppContext.renderOpenFile = (
     openedFilePosition = true, // 已打开的文件列表定位
   }
 ) => {
-  const { openFileArray, currentOpenFileId, editorInstance, workspaceTree } = AppContext;
+  const { openFileArray, currentOpenFileId, editorInstance, workspaceTree, editorViewStateMap, initEditorViewState } = AppContext;
+  // 新打开的与当前打开的文件相同
+  if ((!newOpenFileId && !currentOpenFileId) || newOpenFileId === currentOpenFileId) {
+    return;
+  }
   let fileData;
   // 保存当前编辑还未保存的文件
   if (currentOpenFileId) {
@@ -154,6 +162,8 @@ AppContext.renderOpenFile = (
       fileData.jsCode = newJsCode;
       fileData.needSave = true;
     }
+    // 保存上一次的编辑器状态
+    editorViewStateMap[currentOpenFileId] = editorInstance.saveViewState();
   }
   fileData = undefined;
   if (newOpenFileId) {
@@ -175,14 +185,20 @@ AppContext.renderOpenFile = (
   if (!fileData) {
     // 未找到文件 - 打开默认空白页
     AppContext.currentOpenFileId = undefined;
-    AppContext.editorInstance.setValue("");
+    editorInstance.setValue("");
     // 清除数据
     fileData = { id: undefined, filePath: "", name: "" };
   } else {
     // 找到了文件 - 打开文件 - 编辑器内容、状态
     AppContext.currentOpenFileId = fileData.id;
     fileData.lastOpenTime = new Date().getTime();
-    AppContext.editorInstance.setValue(fileData.jsCode || "");
+    // 编辑器内容
+    editorInstance.setValue(fileData.jsCode || "");
+    // 还原编辑器状态
+    const editorViewState = editorViewStateMap[fileData.id] || initEditorViewState;
+    if (editorViewState) {
+      editorInstance.restoreViewState(editorViewState);
+    }
   }
   // 文件树节点定位
   if (treePosition && fileData.id) {
@@ -203,6 +219,12 @@ AppContext.renderOpenFile = (
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
   // 调试方法下拉框
+  // 清除已经关闭了的编辑器状态
+  lodash.forEach(editorViewStateMap, (_, id) => {
+    if (openFileArray.findIndex(file => file.id === id) < 0) {
+      editorViewStateMap[id] = undefined;
+    }
+  });
 };
 
 // 文件内容变化
