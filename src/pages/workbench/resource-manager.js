@@ -159,6 +159,33 @@ const treeConfig = {
       }
     }
   },
+  // 节点拖拽移动 https://github.com/mar10/fancytree/wiki/ExtDnd5
+  // dnd5: {
+  //   autoExpandMS: 1500,
+  //   preventRecursion: true,
+  //   preventVoidMoves: true,
+  //   dragStart: function (node, data) {
+  //     // Return true to allow the drag operation
+  //     return true;
+  //   },
+  //   dragDrag: function (node, data) {
+  //   },
+  //   dragEnd: function (node, data) {
+  //   },
+  //   dragEnter: function (node, data) {
+  //     // Accept everything:
+  //     return true;
+  //   },
+  //   dragOver: function (node, data) {
+  //     data.dropEffect = data.dropEffectSuggested;
+  //   },
+  //   dragExpand: function (node, data) {
+  //   },
+  //   dragLeave: function (node, data) {
+  //   },
+  //   dragDrop: function (node, data) {
+  //   }
+  // },
 };
 
 // 初始化工作空间树

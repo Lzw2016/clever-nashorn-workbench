@@ -145,8 +145,6 @@ const AppContext = {
 //   文件页签定位
 //   已打开的文件列表（切换，新增，...）
 //   顶部文件路径
-// 3.工具栏
-//   调试方法下拉框
 AppContext.renderOpenFile = (
   newOpenFileId,
   {
@@ -227,7 +225,6 @@ AppContext.renderOpenFile = (
   const fullPath = fileData.filePath + fileData.name;
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
-  // 调试方法下拉框
   // 清除已经关闭了的编辑器状态
   lodash.forEach(editorViewStateMap, (_, id) => {
     if (openFileArray.findIndex(file => file.id === id) < 0) {
@@ -247,6 +244,8 @@ AppContext.fileContentChange = () => {
     return;
   }
   const newJsCode = AppContext.editorInstance.getValue();
+  // 调试方法下拉框
+  AppContext.parseDebugMethods(newJsCode);
   if (fileData.needSave) {
     fileData.jsCode = newJsCode;
     return;
@@ -283,6 +282,122 @@ AppContext.showContainerCenter = (editor = true) => {
   editorInstance.hide();
   centerPage.show();
 };
+
+// 解析显示新的调试方法名
+const esprima = require('esprima');
+const estraverse = require('estraverse');
+// const espree = require('espree');
+// const eslintScope = require('eslint-scope');
+AppContext.parseDebugMethods = (jsCode) => {
+  if (!jsCode || lodash.trim(jsCode).length <= 0) {
+    // 清空 methods
+    return;
+  }
+  let ast;
+  try {
+    ast = esprima.parseScript(jsCode, {
+      jsx: false,
+      range: false, // true
+      loc: false, // true
+      tolerant: false,
+      tokens: false,
+      comment: false, // true
+    });
+  } catch (error) {
+    // 清空 methods
+    return;
+  }
+  console.log("ast-->", ast);
+
+  // const astTmp = espree.parse(jsCode, { sourceType: "script", ecmaVersion: 6 });
+  // const scopeManager = eslintScope.analyze(astTmp);
+  // console.log("scopeManager--->", scopeManager);
+  // const currentScope = scopeManager.acquire(astTmp);
+  // console.log("currentScope--->", currentScope);
+  // window.scopeManager = scopeManager;
+  // window.currentScope = currentScope;
+
+  const methods = [];
+  estraverse.traverse(ast, {
+    enter: function (node) {
+      console.log("node--->", node);
+      // exports.test1 = function() {};
+      // var test2 = function() {};
+      // exports.test2 = test2;
+      // function test3() {};
+      // exports.test3 = test3;
+      if (
+        node.type === "AssignmentExpression" &&
+        node.operator === "=" &&
+        node.left.type === "MemberExpression" &&
+        node.left.object.type === "Identifier" &&
+        node.left.object.name === "exports" &&
+        node.left.property.type === "Identifier" &&
+        ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
+      ) {
+        methods.push(node.left.property.name);
+      }
+      // module.exports.test4 = function() {};
+      // var test5 = function() {};
+      // module.exports.test5 = test5;
+      // function test6() {};
+      // module.exports.test6 = test6;
+      if (
+        node.type === "AssignmentExpression" &&
+        node.operator === "=" &&
+        node.left.type === "MemberExpression" &&
+        node.left.object.type === "MemberExpression" &&
+        node.left.property.type === "Identifier" &&
+        node.left.object.object.type === "Identifier" &&
+        node.left.object.object.name === "module" &&
+        node.left.object.property.type === "Identifier" &&
+        node.left.object.property.name === "exports" &&
+        ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
+      ) {
+        methods.push(node.left.property.name);
+      }
+      // exports = {
+      //   test7: function() {},
+      // }
+      if (
+        node.type === "AssignmentExpression" &&
+        node.operator === "=" &&
+        node.left.type === "Identifier" &&
+        node.left.name === "exports" &&
+        ["ObjectExpression"].indexOf(node.right.type) >= 0
+      ) {
+        methods.length = 0;
+        node.right.properties.forEach(property => {
+          if (property.type === "Property" && property.key.type === "Identifier" && property.value.type === "FunctionExpression") {
+            methods.push(property.key.name);
+          }
+        });
+      }
+      // module.exports = {
+      //   test8: function() {},
+      // }
+      if (
+        node.type === "AssignmentExpression" &&
+        node.operator === "=" &&
+        node.left.type === "MemberExpression" &&
+        node.left.object.type === "Identifier" &&
+        node.left.object.name === "module" &&
+        node.left.property.type === "Identifier" &&
+        node.left.property.name === "exports" &&
+        ["ObjectExpression"].indexOf(node.right.type) >= 0
+      ) {
+        methods.length = 0;
+        node.right.properties.forEach(property => {
+          if (property.type === "Property" && property.key.type === "Identifier" && property.value.type === "FunctionExpression") {
+            methods.push(property.key.name);
+          }
+        });
+      }
+    }
+  });
+  console.log("methods-->", methods);
+};
+AppContext.parseDebugMethods = lodash.debounce(AppContext.parseDebugMethods, 300, { maxWait: 500 });
 
 window.AppContext = AppContext;
 export default AppContext;
