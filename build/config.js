@@ -35,6 +35,8 @@ const port = 8000;
 const needOpenApp = false;
 // 需要 Analyzer
 const needAnalyzer = false;
+// 使用OSS
+const useOss = true;
 
 // 代理配置
 const proxy = {
@@ -80,6 +82,7 @@ module.exports = {
   port,
   needOpenApp,
   needAnalyzer,
+  useOss,
   proxy,
   extCacheGroups,
 };

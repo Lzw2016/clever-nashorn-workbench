@@ -15,31 +15,31 @@ const pagesConfig = [
     htmlPath: 'workbench/index.html',
     jsPathArray: ['workbench/index.js'],
   },
-  {
-    htmlPath: 'vConsole/index.html',
-    jsPathArray: ['vConsole/index.js'],
-  },
-  {
-    htmlPath: 'monaco-editor/index.html',
-    jsPathArray: [
-      'monaco-editor/index.js',
-      {
-        srcPath: '../../node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
-        outPath: 'monaco-editor/editor.worker.js',
-      },
-      // {
-      //   srcPath: '../../node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js',
-      //   outPath: 'public/monaco-editor/ts.worker.js',
-      // },
-    ],
-  },
-  {
-    htmlPath: 'monaco-editor/index2.html',
-    jsPathArray: ['monaco-editor/index2.js'],
-  },
-  {
-    htmlPath: 'monaco-editor/index3.html',
-    jsPathArray: ['monaco-editor/index3.js'],
-  },
+  // {
+  //   htmlPath: 'vConsole/index.html',
+  //   jsPathArray: ['vConsole/index.js'],
+  // },
+  // {
+  //   htmlPath: 'monaco-editor/index.html',
+  //   jsPathArray: [
+  //     'monaco-editor/index.js',
+  //     {
+  //       srcPath: '../../node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
+  //       outPath: 'monaco-editor/editor.worker.js',
+  //     },
+  //     // {
+  //     //   srcPath: '../../node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js',
+  //     //   outPath: 'public/monaco-editor/ts.worker.js',
+  //     // },
+  //   ],
+  // },
+  // {
+  //   htmlPath: 'monaco-editor/index2.html',
+  //   jsPathArray: ['monaco-editor/index2.js'],
+  // },
+  // {
+  //   htmlPath: 'monaco-editor/index3.html',
+  //   jsPathArray: ['monaco-editor/index3.js'],
+  // },
 ];
 module.exports.pagesConfig = pagesConfig;

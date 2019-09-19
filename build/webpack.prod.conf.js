@@ -7,9 +7,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // 压缩 JS
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+// 阿里云OSS支持
+const WebpackAliyunOss = require('webpack-aliyun-oss');
 // 压缩 css
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const config = require("./config");
+const aliOssConf = require("../ali-oss-conf");
 const webpackBaseConf = require("./webpack.base.conf");
 const postcss = require('../postcss.config');
 
@@ -19,7 +22,7 @@ module.exports = {
     path: config.distPath,
     filename: '[name].[chunkhash].bundle.js',
     chunkFilename: '[name].[chunkhash].chunk.js',
-    publicPath: "/"
+    publicPath: config.useOss ? `${aliOssConf.ossUrl}/${config.appVersion}/` : '',
   },
   mode: "production",
   // 加载器 loader 配置项
@@ -206,6 +209,23 @@ module.exports = {
     }),
     // 删除 dist 文件夹
     new CleanWebpackPlugin(),
+    // 静态资源上传资源到阿里云oss
+    config.useOss
+      ? new WebpackAliyunOss({
+        from: [`${config.distPath}/**`, `!${config.distPath}/**/*.html`],
+        dist: `/${config.appVersion}/`,
+        region: aliOssConf.region,
+        accessKeyId: aliOssConf.accessKeyId,
+        accessKeySecret: aliOssConf.accessKeySecret,
+        bucket: aliOssConf.bucket,
+        // setOssPath(filePath) {
+        //   return filePath;
+        // },
+        setHeaders(filePath) {
+          return { 'Cache-Control': 'max-age=31536000' };
+        }
+      })
+      : null,
   ],
   resolve: {
     // 设置可省略文件后缀名
