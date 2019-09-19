@@ -100,13 +100,13 @@ module.exports = {
       },
       // art-template 模版配置 https://aui.github.io/art-template/zh-cn/docs/options.html
       {
-        test: /\.art$/,
+        test: /\.art\.html$/,
         loader: "art-template-loader",
         options: {
           // 是否开启对模板输出语句自动编码功能。为 false 则关闭编码输出功能。escape 可以防范 XSS 攻击
           escape: true,
           // 默认后缀名。如果没有后缀名，则会自动添加 extname
-          extname: '.art',
+          extname: '.art.html',
           // bail 如果为 true，编译错误与运行时错误都会抛出异常
           bail: true,
           // 是否开启缓存
