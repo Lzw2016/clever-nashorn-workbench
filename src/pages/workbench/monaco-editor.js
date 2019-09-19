@@ -76,6 +76,8 @@ $(document).ready(function () {
     // extra libraries(配置扩展的库)
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
       `
+        var Java = {};
+        Java.type = function() { return {}; };
         var console = {};
         console.debug = function() {};
         console.info = function() {};

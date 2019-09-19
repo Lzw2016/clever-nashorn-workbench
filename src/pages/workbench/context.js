@@ -45,7 +45,12 @@ const AppContext = {
       workspaceTitle: $(".open-file-full-path .workspace-title"),
       fullPathTitle: $(".open-file-full-path .file-full-path-title"),
     },
+    debugMethods: $("#debug-method-name"),
+    debug: $(".workbench-header-tools .fa-button.fa.fa-bug"),
+    runLogs: $(".workbench-header-tools .fa-button.fa.fa-file-text-o"),
+    history: $(".workbench-header-tools .fa-button.fa.fa-history"),
     console: $(".workbench-header-tools .console"),
+    keyboard: $(".workbench-header-tools .fa-button.fa.fa-keyboard-o"),
   },
 
   // workbench左边
@@ -284,42 +289,101 @@ AppContext.showContainerCenter = (editor = true) => {
 };
 
 // 解析显示新的调试方法名
+const refreshDebugMethods = (methods = []) => {
+  if (!methods) methods = [];
+  const { workbenchHeaderTools: { debugMethods } } = AppContext;
+  const html = [];
+  html.push('<option value="">请选择方法名</option>');
+  const tmpArray = [];
+  methods.forEach(method => {
+    if (tmpArray.indexOf(method) >= 0) {
+      return;
+    }
+    tmpArray.push(method);
+    html.push(`<option value="${method}">${method}</option>`);
+  });
+  const debugMethod = debugMethods.val();
+  debugMethods.html(html.join("\n"));
+  if (tmpArray.indexOf(debugMethod) < 0) {
+    debugMethods.val("");
+  } else {
+    debugMethods.val(debugMethod);
+  }
+};
 const esprima = require('esprima');
 const estraverse = require('estraverse');
 // const espree = require('espree');
-// const eslintScope = require('eslint-scope');
+const eslintScope = require('eslint-scope');
+const isFunctionForIdentifier = (variables = [], name = "") => {
+  if (!variables) variables = [];
+  const variable = variables.find(item => item && item.name === name);
+  if (!variable || !variable.defs || !variable.defs.length || variable.defs.length <= 0) {
+    return false;
+  }
+  const def = variable.defs.find(tmp => tmp && tmp.node && tmp.node.init && tmp.node.init.type === "FunctionExpression");
+  if (def) return true;
+  let result = false;
+  variable.defs.forEach(tmp => {
+    if (result) {
+      return;
+    }
+    if (tmp && tmp.node && tmp.node.init && tmp.node.init.type === "Identifier") {
+      result = isFunctionForIdentifier(variables, tmp.node.init.name);
+    }
+  });
+  return result;
+};
+let lastParseScript = "";
 AppContext.parseDebugMethods = (jsCode) => {
   if (!jsCode || lodash.trim(jsCode).length <= 0) {
-    // 清空 methods
+    lastParseScript = "";
+    refreshDebugMethods();
     return;
   }
+  if (lodash.trim(jsCode || "") === lodash.trim(lastParseScript || "")) {
+    return;
+  }
+  lastParseScript = jsCode;
   let ast;
   try {
     ast = esprima.parseScript(jsCode, {
       jsx: false,
-      range: false,       // true
-      loc: false,         // true
+      range: true,       // true
+      loc: true,         // true
       tolerant: false,
       tokens: false,
-      comment: false,     // true
+      comment: true,     // true
     });
   } catch (error) {
-    // 清空 methods
+    refreshDebugMethods();
     return;
   }
-  // const astTmp = espree.parse(jsCode, { sourceType: "script", ecmaVersion: 6 });
-  // const scopeManager = eslintScope.analyze(astTmp);
-  // console.log("scopeManager--->", scopeManager);
-  // const currentScope = scopeManager.acquire(astTmp);
-  // console.log("currentScope--->", currentScope);
-  // window.scopeManager = scopeManager;
-  // window.currentScope = currentScope;
-
+  // 获取全局范围的变量
+  // const astTmp = espree.parse(jsCode, { sourceType: "module", ecmaVersion: 6 });
+  let currentScope;
+  try {
+    // http://estools.github.io/escope/global.html#analyze
+    const scopeManager = eslintScope.analyze(ast, {
+      optimistic: false,
+      directive: false,
+      nodejsScope: false,
+      impliedStrict: false,
+      // one of ['script', 'module']
+      sourceType: 'script',
+      ecmaVersion: 5,
+      childVisitorKeys: null,
+      fallback: 'iteration'
+    });
+    currentScope = scopeManager.acquire(ast);
+  } catch (error) {
+    console.warn("脚本语法解析异常", error);
+    currentScope = {};
+  }
+  // 开始解析 Function 名称
   const methods = [];
   estraverse.traverse(ast, {
     enter: function (node) {
       // console.log("node--->", node);
-
       // exports.test1 = function() {};
       // var test2 = function() {};
       // exports.test2 = test2;
@@ -334,6 +398,12 @@ AppContext.parseDebugMethods = (jsCode) => {
         node.left.property.type === "Identifier" &&
         ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
       ) {
+        if (node.right.type === "Identifier") {
+          if (isFunctionForIdentifier(currentScope.variables, node.right.name)) {
+            methods.push(node.left.property.name);
+          }
+          return;
+        }
         methods.push(node.left.property.name);
         return;
       }
@@ -354,6 +424,12 @@ AppContext.parseDebugMethods = (jsCode) => {
         node.left.object.property.name === "exports" &&
         ["FunctionExpression", "Identifier"].indexOf(node.right.type) >= 0
       ) {
+        if (node.right.type === "Identifier") {
+          if (isFunctionForIdentifier(currentScope.variables, node.right.name)) {
+            methods.push(node.left.property.name);
+          }
+          return;
+        }
         methods.push(node.left.property.name);
         return;
       }
@@ -397,9 +473,9 @@ AppContext.parseDebugMethods = (jsCode) => {
       }
     }
   });
-  console.log("methods-->", methods);
+  refreshDebugMethods(methods);
 };
-AppContext.parseDebugMethods = lodash.debounce(AppContext.parseDebugMethods, 300, { maxWait: 500 });
+AppContext.parseDebugMethods = lodash.debounce(AppContext.parseDebugMethods, 600, { maxWait: 1000 });
 
 window.AppContext = AppContext;
 export default AppContext;
