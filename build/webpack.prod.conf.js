@@ -5,7 +5,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // 清除生成文件
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // 压缩 JS
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 // 压缩 css
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const config = require("./config");
@@ -37,10 +38,8 @@ module.exports = {
         }],
         include: [
           config.srcPath,
-          config.nodeModulesPath,
-          // path.resolve(config.nodeModulesPath, 'webpack-dev-server/client'),
-          // path.resolve("../node_modules/eslint-scope/lib"),
-          // path.resolve(config.nodeModulesPath, 'eslint-scope/lib'),
+          path.resolve(config.nodeModulesPath, 'webpack-dev-server/client'),
+          path.resolve(config.nodeModulesPath, 'eslint-scope/lib'),
         ],
       },
       {
@@ -144,18 +143,14 @@ module.exports = {
     runtimeChunk: {
       name: 'manifest',
     },
-    // 用于配置 minimizers 和选项
+    // // 用于配置 minimizers 和选项
     minimizer: [
       // webpack 不支持es6语法的压缩，这里要使用需要babel配合
       // 压缩 js
-      new UglifyJsPlugin({
+      new TerserPlugin({
+        test: /\.js(\?.*)?$/i,
         cache: true,
-        parallel: true,
-        // set to true if you want JS source maps
         sourceMap: true,
-        // uglifyOptions: {
-        //   ecma: 8,
-        // },
       }),
       // 压缩 css
       new OptimizeCSSAssetsPlugin({})
