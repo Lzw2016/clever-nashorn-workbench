@@ -903,12 +903,11 @@ body {
         color: rgb(233, 233, 233);
         background-color: rgb(30, 30, 30);
       }
-      &.debug {
+      &.debug.fa-bug {
         color: rgb(73, 156, 84) !important;
-        // background-image: url(../../assets/images/vscode-icons/dark/debug.svg);
       }
-      &.debugging {
-        color: rgb(73, 156, 84) !important;
+      &.debug.fa-stop {
+        color: rgb(199, 84, 80) !important;
       }
     }
     .console {

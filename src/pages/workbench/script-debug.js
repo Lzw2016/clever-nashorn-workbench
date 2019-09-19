@@ -3,23 +3,40 @@ import lodash from "lodash";
 import AppContext from "./context";
 
 // 调试代码
+const renderDebugButton = (isDebug) => {
+  if (isDebug) {
+    AppContext.workbenchHeaderTools.debug.removeClass("fa-bug");
+    AppContext.workbenchHeaderTools.debug.addClass("fa-stop");
+    AppContext.workbenchHeaderTools.debug.attr("title", "停止调试");
+  } else {
+    AppContext.workbenchHeaderTools.debug.removeClass("fa-stop");
+    AppContext.workbenchHeaderTools.debug.addClass("fa-bug");
+    AppContext.workbenchHeaderTools.debug.attr("title", "开始调试");
+  }
+};
 let isDebug = false;
+let webSocket;
 const debug = (fileFullPath, fucName) => {
   isDebug = true;
-  const ws = new WebSocket(`ws://${window.location.host}/ws/debug`);
-  ws.onopen = function () {
-    console.log("已连接服务器...");
-    ws.send(JSON.stringify({ type: 'normal', fileFullPath, fucName }));
+  renderDebugButton(isDebug);
+  const startTime = new Date().getTime();
+  const debugFlagText = `[${fileFullPath}] - [${fucName}]`;
+  webSocket = new WebSocket(`ws://${window.location.host}/ws/debug`);
+  webSocket.onopen = function () {
+    console.log(`${debugFlagText} 已连接服务器...`);
+    webSocket.send(JSON.stringify({ type: 'normal', fileFullPath, fucName }));
   };
-  ws.onclose = function (evt) {
+  webSocket.onclose = function (evt) {
     isDebug = false;
-    console.warn("关闭与服务器的连接！");
+    const endTime = new Date().getTime();
+    renderDebugButton(isDebug);
+    console.warn(`${debugFlagText} 关闭与服务器的连接！ --> [耗时：${(endTime - startTime) / 1000.0}s]`);
   };
-  ws.onerror = function (evt) {
-    console.error("连接服务器错误", evt);
+  webSocket.onerror = function (evt) {
+    console.error(`${debugFlagText} 连接服务器错误`, evt);
   };
   // 打印调试日志
-  ws.onmessage = function (evt) {
+  webSocket.onmessage = function (evt) {
     const data = JSON.parse(evt.data);
     if (data.type === "log") {
       // 日志前缀 [2019-08-28  11:52:17.208] [INFO] index.js -
@@ -50,7 +67,8 @@ const debug = (fileFullPath, fucName) => {
 };
 AppContext.workbenchHeaderTools.debug.on("click", () => {
   if (isDebug) {
-    layer.msg("当前正在调试", { time: 1500 });
+    // layer.msg("当前正在调试", { time: 1500 });
+    webSocket.close();
     return;
   }
   if (!AppContext.currentOpenFileId) {
@@ -81,7 +99,5 @@ AppContext.workbenchHeaderTools.debug.on("click", () => {
     );
     return;
   }
-  // 按钮状态
   debug(fileData.filePath + fileData.name, fucName);
-  // 按钮状态
 });
