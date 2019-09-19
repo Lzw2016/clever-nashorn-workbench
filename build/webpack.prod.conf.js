@@ -37,9 +37,11 @@ module.exports = {
         }],
         include: [
           config.srcPath,
-          path.resolve(config.nodeModulesPath, 'webpack-dev-server/client'),
-          path.resolve(config.nodeModulesPath, 'eslint-scope'),
-        ]
+          config.nodeModulesPath,
+          // path.resolve(config.nodeModulesPath, 'webpack-dev-server/client'),
+          // path.resolve("../node_modules/eslint-scope/lib"),
+          // path.resolve(config.nodeModulesPath, 'eslint-scope/lib'),
+        ],
       },
       {
         test: /\.css$/,
