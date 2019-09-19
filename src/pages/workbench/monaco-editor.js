@@ -1,6 +1,7 @@
 import * as monacoRequire from 'require';
 import lodash from 'lodash';
 import AppContext from './context';
+import jsCodeLib from './js-code-lib';
 
 // monaco-editor 资源文件路径配置
 monacoRequire.config({
@@ -74,18 +75,7 @@ $(document).ready(function () {
       noLib: false,
     });
     // extra libraries(配置扩展的库)
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(
-      `
-        var Java = {};
-        Java.type = function() { return {}; };
-        var console = {};
-        console.debug = function() {};
-        console.info = function() {};
-        console.log = function() {};
-        console.warn = function() {};
-        console.error = function() {};
-      `
-    );
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(jsCodeLib);
     const options = {
       width: "100%",
       height: "100%",
