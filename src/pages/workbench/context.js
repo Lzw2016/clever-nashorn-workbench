@@ -487,8 +487,9 @@ AppContext.saveJsCodeFile = async (id) => {
   if (!fileData.needSave) {
     return;
   }
-  const closeIndex = layer.load(1);
   const { name, jsCode, filePath, description } = fileData;
+  // TODO jsCode 死循环校验
+  const closeIndex = layer.load(1);
   const newFileData = await update(fileData.id, { name, jsCode, filePath, description });
   fileData.needSave = false;
   fileData.id = newFileData.id;
