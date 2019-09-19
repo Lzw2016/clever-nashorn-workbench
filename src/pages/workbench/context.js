@@ -231,11 +231,11 @@ AppContext.renderOpenFile = (
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
   // 清除已经关闭了的编辑器状态
-  lodash.forEach(editorViewStateMap, (_, id) => {
-    if (openFileArray.findIndex(file => file.id === id) < 0) {
-      editorViewStateMap[id] = undefined;
-    }
-  });
+  // lodash.forEach(editorViewStateMap, (_, id) => {
+  //   if (openFileArray.findIndex(file => file.id === id) < 0) {
+  //     editorViewStateMap[id] = undefined;
+  //   }
+  // });
 };
 
 // 文件内容变化
@@ -246,6 +246,7 @@ AppContext.fileContentChange = () => {
   const { openFileArray, currentOpenFileId } = AppContext;
   const fileData = openFileArray.find(file => file.id === currentOpenFileId);
   if (!fileData) {
+    AppContext.parseDebugMethods();
     return;
   }
   const newJsCode = AppContext.editorInstance.getValue();
