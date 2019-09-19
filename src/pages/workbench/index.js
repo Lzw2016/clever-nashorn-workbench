@@ -1,4 +1,5 @@
 import './index.scss';
+import './layer.scss';
 import 'font-awesome/css/font-awesome.min.css';
 import 'simplebar/dist/simplebar.css';
 // import lodash from 'lodash';
@@ -13,6 +14,7 @@ import './vconsole';
 import './monaco-editor';
 import './resource-manager';
 import './editor-file-tools';
+import './script-debug';
 
 $(document).ready(() => {
   // 显示内容

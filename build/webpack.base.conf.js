@@ -255,6 +255,7 @@ const baseExternals = {
   VConsole: "VConsole",
   require: "require",
   monaco: "monaco",
+  layer: "layer",
 };
 
 module.exports = {

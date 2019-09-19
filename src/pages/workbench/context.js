@@ -1,7 +1,9 @@
+import layer from "layer";
 import lodash from "lodash";
 import fileTabArt from "./template/file-tab.art.html";
 import openedFileArt from "./template/opened-file.art.html";
 import fileFullPathArt from "./template/file-full-path.art.html";
+import { update } from "@/api/js-code-file-controller";
 
 // 整个App的上下文管理
 const AppContext = {
@@ -46,7 +48,7 @@ const AppContext = {
       fullPathTitle: $(".open-file-full-path .file-full-path-title"),
     },
     debugMethods: $("#debug-method-name"),
-    debug: $(".workbench-header-tools .fa-button.fa.fa-bug"),
+    debug: $(".workbench-header-tools .fa-button.fa.debug"),
     runLogs: $(".workbench-header-tools .fa-button.fa.fa-file-text-o"),
     history: $(".workbench-header-tools .fa-button.fa.fa-history"),
     console: $(".workbench-header-tools .console"),
@@ -268,7 +270,7 @@ AppContext.fileContentChange = () => {
   AppContext.openedFile.openedFileContent.html(openedFileArt(dataTmp2));
 };
 
-// 显示中间编辑器
+// 显示(隐藏)中间编辑器
 AppContext.showContainerCenter = (editor = true) => {
   const { editorContainer: { centerPage, editorTools, editorInstance } } = AppContext;
   if (editor) {
@@ -477,6 +479,41 @@ AppContext.parseDebugMethods = (jsCode) => {
   refreshDebugMethods(methods);
 };
 AppContext.parseDebugMethods = lodash.debounce(AppContext.parseDebugMethods, 600, { maxWait: 1000 });
+
+// 保存脚本文件
+AppContext.saveJsCodeFile = async (id) => {
+  const saveId = id || AppContext.currentOpenFileId;
+  const fileData = AppContext.openFileArray.find(file => file.id === saveId);
+  if (!fileData.needSave) {
+    return;
+  }
+  const closeIndex = layer.load(1);
+  const { name, jsCode, filePath, description } = fileData;
+  const newFileData = await update(fileData.id, { name, jsCode, filePath, description });
+  fileData.needSave = false;
+  fileData.id = newFileData.id;
+  fileData.bizType = newFileData.bizType;
+  fileData.groupName = newFileData.groupName;
+  fileData.nodeType = newFileData.nodeType;
+  fileData.filePath = newFileData.filePath;
+  fileData.name = newFileData.name;
+  fileData.jsCode = newFileData.jsCode;
+  fileData.description = newFileData.description;
+  fileData.createAt = newFileData.createAt;
+  fileData.updateAt = newFileData.updateAt;
+  // 文件页签定位
+  const dataTmp1 = { openFileArray: AppContext.openFileArray, currentOpenFileId: fileData.id };
+  AppContext.editorTools.fileTabs.html(fileTabArt(dataTmp1));
+  // 已打开的文件列表
+  const dataTmp2 = dataTmp1;
+  AppContext.openedFile.openedFileContent.html(openedFileArt(dataTmp2));
+  // 顶部文件路径
+  const fullPath = fileData.filePath + fileData.name;
+  const paths = fullPath.split("/").filter(path => path && path.length > 0);
+  AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
+  layer.close(closeIndex);
+  return fileData;
+};
 
 window.AppContext = AppContext;
 export default AppContext;

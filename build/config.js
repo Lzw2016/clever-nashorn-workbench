@@ -43,6 +43,12 @@ const proxy = {
     changeOrigin: true,
     pathRewrite: { '^/': '' },
   },
+  '/ws': {
+    target: 'ws://127.0.0.1:18081/',
+    changeOrigin: true,
+    pathRewrite: { '^/': '' },
+    ws: true,
+  },
 };
 
 // webpack.prod.conf 中的 splitChunks.cacheGroups 扩展

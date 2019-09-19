@@ -15,3 +15,8 @@ export async function jsCodeFile(id) {
 export async function add(filedata) {
   return http.post(`/api/js_code_file/add`, filedata);
 }
+
+// 更新文件或者文件夹
+export async function update(id, filedata) {
+  return http.put(`/api/js_code_file/${id}`, filedata);
+}

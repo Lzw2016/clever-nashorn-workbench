@@ -49,7 +49,7 @@ const keyMapBinding = (monaco) => {
   );
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-    () => console.log("保存"),
+    () => AppContext.saveJsCodeFile(),
   );
 };
 
