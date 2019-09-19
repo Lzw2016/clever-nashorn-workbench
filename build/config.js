@@ -14,7 +14,8 @@ const runModeEnum = {
 // 所有路径配置的前缀(路径配置是相对项目根路径为前提配置的)
 const pathPrefix = '../';
 // 打包版本号
-const appVersion = new Date().getTime();
+// const appVersion = new Date().getTime();
+const appVersion = "v1.0.0";
 // 网站图标绝对路径
 const favicon = path.resolve(__dirname, `${pathPrefix}public/images/favicon.png`);
 // 项目根目录绝对路径

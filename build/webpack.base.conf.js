@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const config = require("./config");
+const aliOssConf = require("../ali-oss-conf");
 const isDev = config.runMode === config.runModeEnum.dev;
 
 // entry - jsPath 名称处理去掉.js 后缀
@@ -104,6 +105,8 @@ const getHtmlPlugin = () => {
       chunks: [...Object.keys(config.extCacheGroups), 'manifest', 'vendor', 'commons', ...jsPathArray],
       // HTML页面标题
       title: itemConfig.title,
+      // 静态资源前缀
+      urlPrefix: config.useOss ? `${aliOssConf.ossUrl}/${config.appVersion}/` : "/",
     });
     // console.log("template", htmlWebpackConfig.template);
     htmlPluginArray.push(new HtmlWebpackPlugin(htmlWebpackConfig));

@@ -2,10 +2,12 @@ import * as monacoRequire from 'require';
 import lodash from 'lodash';
 import AppContext from './context';
 import jsCodeLib from './js-code-lib';
+import { useOss, appVersion } from '../../../build/config';
+import { ossUrl } from '../../../ali-oss-conf';
 
 // monaco-editor 资源文件路径配置
 monacoRequire.config({
-  baseUrl: "/public/js/monaco-editor",
+  baseUrl: useOss ? `${ossUrl}/${appVersion}/public/js/monaco-editor` : "/public/js/monaco-editor",
   paths: { vs: './min/vs' },
   'vs/nls': {
     availableLanguages: {
