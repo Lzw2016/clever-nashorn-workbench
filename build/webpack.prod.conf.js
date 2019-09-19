@@ -27,10 +27,18 @@ module.exports = {
       ...webpackBaseConf.baseModuleRules,
       {
         test: /\.(js|jsx)$/,
-        use: ['babel-loader?cacheDirectory=true'],
+        use: [{
+          loader: 'babel-loader',
+          // options、query不能和loader数组一起使用
+          options: {
+            // 利用缓存，提高性能，babel is slow
+            cacheDirectory: true,
+          },
+        }],
         include: [
           config.srcPath,
-          path.resolve(config.nodeModulesPath, 'webpack-dev-server/client')
+          path.resolve(config.nodeModulesPath, 'webpack-dev-server/client'),
+          path.resolve(config.nodeModulesPath, 'eslint-scope'),
         ]
       },
       {
@@ -142,7 +150,10 @@ module.exports = {
         cache: true,
         parallel: true,
         // set to true if you want JS source maps
-        sourceMap: true
+        sourceMap: true,
+        // uglifyOptions: {
+        //   ecma: 8,
+        // },
       }),
       // 压缩 css
       new OptimizeCSSAssetsPlugin({})

@@ -1,5 +1,8 @@
 import layer from "layer";
 import lodash from "lodash";
+import * as esprima from "esprima";
+import * as estraverse from "estraverse";
+import * as eslintScope from "eslint-scope";
 import fileTabArt from "./template/file-tab.art.html";
 import openedFileArt from "./template/opened-file.art.html";
 import fileFullPathArt from "./template/file-full-path.art.html";
@@ -313,10 +316,6 @@ const refreshDebugMethods = (methods = []) => {
     debugMethods.val(debugMethod);
   }
 };
-const esprima = require('esprima');
-const estraverse = require('estraverse');
-// const espree = require('espree');
-const eslintScope = require('eslint-scope');
 const isFunctionForIdentifier = (variables = [], name = "") => {
   if (!variables) variables = [];
   const variable = variables.find(item => item && item.name === name);
