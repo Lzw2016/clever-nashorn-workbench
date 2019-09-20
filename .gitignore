@@ -23,4 +23,4 @@ server/node_modules
 server/dist
 server/yarn.lock
 server/package-lock.json
-ali-oss-conf.js
+git-ignore.js
