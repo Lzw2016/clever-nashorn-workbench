@@ -35,9 +35,15 @@ jsCodeLib.push(
     init: function() {},
   };
   /**
-   * 导入其他依赖
+   * 获取自定义模块
    */
   var require = function() {
+    return {};
+  };
+  /**
+   * 获取第三方模块，如：lodash、Underscore
+   */
+  var requireLib = function() {
     return {};
   };
   /**
