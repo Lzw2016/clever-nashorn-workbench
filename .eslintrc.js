@@ -44,6 +44,7 @@ module.exports = {
     "jQuery": true,
     "$": true,
     "VConsole": true,
+    "adapterWebsocketUrl": true,
   },
   // 重新覆盖 extends: 'standard'的规则 - // 自定义的规则 0 允许; 1 警告; 2 错误
   rules: {

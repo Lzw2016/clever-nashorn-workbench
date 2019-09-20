@@ -21,7 +21,11 @@ const debug = (fileFullPath, fucName) => {
   renderDebugButton(isDebug);
   const startTime = new Date().getTime();
   const debugFlagText = `[${fileFullPath}] - [${fucName}]`;
-  webSocket = new WebSocket(`ws://${window.location.host}/ws/debug`);
+  if (adapterWebsocketUrl) {
+    webSocket = new WebSocket(`ws://nashorn.msvc.top:18081/ws/debug`);
+  } else {
+    webSocket = new WebSocket(`ws://${window.location.host}/ws/debug`);
+  }
   webSocket.onopen = function () {
     console.log(`${debugFlagText} 已连接服务器...`);
     webSocket.send(JSON.stringify({ type: 'normal', fileFullPath, fucName }));

@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -194,6 +195,9 @@ const baseModuleRules = [
 
 // 公用插件
 const basePlugins = [
+  new webpack.DefinePlugin({
+    adapterWebsocketUrl: config.adapterWebsocketUrl && !isDev,
+  }),
   // new HtmlWebpackPlugin({
   //   filename: 'index.html',
   //   template: path.resolve(__dirname, '../src/index.html'),

@@ -38,7 +38,8 @@ const needOpenApp = false;
 const needAnalyzer = false;
 // 使用OSS
 const useOss = true;
-
+// 是否适配WebsocketUrl
+const adapterWebsocketUrl = true;
 // 代理配置
 const proxy = {
   '/api': {
@@ -84,6 +85,7 @@ module.exports = {
   needOpenApp,
   needAnalyzer,
   useOss,
+  adapterWebsocketUrl,
   proxy,
   extCacheGroups,
 };
