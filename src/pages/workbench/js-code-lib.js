@@ -34,7 +34,9 @@ jsCodeLib.push(
      */
     init: function() {},
   };
-  // 导入其他依赖
+  /**
+   * 导入其他依赖
+   */
   var require = function() {
     return {};
   };
@@ -60,9 +62,9 @@ jsCodeLib.push(
    */
   var filepath = "";
   /**
-   * 当前目录名
+   * 当前文件名
    */
-  var filepath = "";
+  var filename = "";
   /**
    * 当前模块ID全局唯一
    */
