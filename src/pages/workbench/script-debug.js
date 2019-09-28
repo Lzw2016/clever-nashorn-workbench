@@ -28,7 +28,7 @@ const debug = (fileFullPath, fucName) => {
   }
   webSocket.onopen = function () {
     console.log(`${debugFlagText} 已连接服务器...`);
-    webSocket.send(JSON.stringify({ type: 'normal', fileFullPath, fucName }));
+    webSocket.send(JSON.stringify({ bizType: AppContext.bizType, groupName: AppContext.groupName, type: 'normal', fileFullPath, fucName }));
   };
   webSocket.onclose = function (evt) {
     isDebug = false;
@@ -47,7 +47,7 @@ const debug = (fileFullPath, fucName) => {
       const logs = [
         `[${data.logTime}] `,
         `[${data.level.toUpperCase()}] `,
-        data.fileName ? (data.filePath + data.fileName) : "",
+        data.fileName ? `${data.bizType}.${data.groupName}#${data.filePath}${data.fileName}` : "",
         " - ",
         ...data.logs,
       ];
