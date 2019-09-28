@@ -6,7 +6,7 @@ import AppContext from "./context";
 // vconsole 初始化
 const vConsole = new VConsole({
   defaultPlugins: [],
-  disableLogScrolling: true,
+  disableLogScrolling: false,
   onReady: function () {
     vConsole.show();
     if (Browser.client.name !== "Chrome") {
