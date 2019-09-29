@@ -918,9 +918,8 @@ body {
     .listener-logs {
       background-image: url(../../assets/images/vscode-icons/dark/vm-running.svg);
       &.stop {
-        background-image: url(../../assets/images/vscode-icons/dark/disconnect.svg);
-        // background-image: url(../../assets/images/vscode-icons/dark/vm-stopped.svg);
-        // background-image: url(../../assets/images/vscode-icons/dark/diff-modified.svg);
+        background-image: url(../../assets/images/stop.svg);
+        // background-image: url(../../assets/images/vscode-icons/dark/disconnect.svg);
       }
     }
     .select-method {
