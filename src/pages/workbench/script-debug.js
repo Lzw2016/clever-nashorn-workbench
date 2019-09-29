@@ -20,14 +20,14 @@ const debug = (fileFullPath, fucName) => {
   isDebug = true;
   renderDebugButton(isDebug);
   const startTime = new Date().getTime();
-  const debugFlagText = `[${fileFullPath}] - [${fucName}]`;
+  const debugFlagText = `[${AppContext.bizType}.${AppContext.groupName}#${fileFullPath}] - [${fucName}]`;
   if (adapterWebsocketUrl) {
     webSocket = new WebSocket(`ws://nashorn.msvc.top:18081/ws/debug`);
   } else {
     webSocket = new WebSocket(`ws://${window.location.host}/ws/debug`);
   }
   webSocket.onopen = function () {
-    console.log(`${debugFlagText} 已连接服务器...`);
+    console.info(`${debugFlagText} 已连接服务器...`);
     webSocket.send(JSON.stringify({ bizType: AppContext.bizType, groupName: AppContext.groupName, type: 'normal', fileFullPath, fucName }));
   };
   webSocket.onclose = function (evt) {

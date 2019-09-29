@@ -633,10 +633,10 @@ body {
       // background-position-x: 2px;
       background-position: 50%;
       background-repeat: no-repeat;
-      background-size: 16px;
+      background-size: 18px;
       margin: 0 4px;
       &:active {
-        background-size: 18px;
+        background-size: 20px;
       }
     }
     .console-top-expanded-folded {
@@ -687,7 +687,7 @@ body {
     border-radius: 3px;
     background-position: 50%;
     background-repeat: no-repeat;
-    background-size: 16px;
+    background-size: 18px;
     &:hover {
       background-color: rgb(60, 63, 65);
     }
@@ -697,7 +697,7 @@ body {
   }
 
   .follow-log {
-    background-image: url(../../assets/images/vscode-icons/dark/arrow-down.svg);
+    background-image: url(../../assets/images/vscode-icons/dark/desktop-download.svg);
   }
   .clear-log {
     background-image: url(../../assets/images/vscode-icons/dark/clear-all.svg);
@@ -800,10 +800,10 @@ body {
       height: $editor-tools-height - 4px;
       background-position: 50%;
       background-repeat: no-repeat;
-      background-size: 16px;
+      background-size: 18px;
       margin: 0 4px;
       &:active {
-        background-size: 18px;
+        background-size: 20px;
       }
     }
 
@@ -886,7 +886,7 @@ body {
       height: $editor-tools-height - 4px;
       background-position: 50%;
       background-repeat: no-repeat;
-      background-size: 16px;
+      background-size: 18px;
       margin: 0 4px;
       &:hover {
         background-color: rgb(30, 30, 30);
@@ -912,7 +912,16 @@ body {
       }
     }
     .console {
+      background-size: 16px;
       background-image: url(../../assets/images/vscode-icons/dark/console.svg);
+    }
+    .listener-logs {
+      background-image: url(../../assets/images/vscode-icons/dark/vm-running.svg);
+      &.stop {
+        background-image: url(../../assets/images/vscode-icons/dark/disconnect.svg);
+        // background-image: url(../../assets/images/vscode-icons/dark/vm-stopped.svg);
+        // background-image: url(../../assets/images/vscode-icons/dark/diff-modified.svg);
+      }
     }
     .select-method {
       cursor: pointer;
@@ -921,7 +930,7 @@ body {
       margin: 0 4px;
       min-width: 110px;
       max-width: 280px;
-      height: $editor-tools-height - 12px;
+      height: $editor-tools-height - 14px;
       background-color: rgb(37, 37, 38);
       color: rgb(240, 240, 240);
       border-color: rgb(90, 90, 90);
