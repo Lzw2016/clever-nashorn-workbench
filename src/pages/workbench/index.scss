@@ -701,6 +701,12 @@ body {
 
   .follow-log {
     background-image: url(../../assets/images/vscode-icons/dark/desktop-download.svg);
+    &:hover {
+      background-color: rgb(30, 30, 30);
+    }
+    &.active:hover{
+      background-color: rgb(60, 63, 65);
+    }
   }
   .clear-log {
     background-image: url(../../assets/images/vscode-icons/dark/clear-all.svg);
