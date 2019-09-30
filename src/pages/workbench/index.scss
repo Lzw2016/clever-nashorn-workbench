@@ -694,6 +694,9 @@ body {
     &.active {
       background-color: rgb(60, 63, 65);
     }
+    &:active {
+      background-size: 20px;
+    }
   }
 
   .follow-log {
