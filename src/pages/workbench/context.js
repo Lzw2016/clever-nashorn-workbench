@@ -202,7 +202,7 @@ AppContext.renderOpenFile = (
     // 未找到文件 - 打开默认空白页
     AppContext.currentOpenFileId = undefined;
     editorInstance.setValue("");
-    // 适配fileData熟悉
+    // 适配fileData属性
     fileData = { id: undefined, filePath: "", name: "" };
   } else {
     AppContext.showContainerCenter(true);
