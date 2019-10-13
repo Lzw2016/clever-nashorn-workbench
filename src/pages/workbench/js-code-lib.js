@@ -528,19 +528,839 @@ jsCodeLib.push(
   declare const JdbcUtils: JdbcUtils;
 
   // ----------------------------------------------------------------------------------------------------------------- 内部工具类 RedisUtils RedisExecutor
+  /**
+   * Redis数据类型
+   */
+  interface RedisDataType {
+    /**
+     * Redis数据类型 none | string | list | set | zset | hash
+     */
+    code(): string;
+  }
+
+  /**
+   * Sorted Set 元素
+   */
+  interface SortedSetItem {
+    /**
+     * value 值
+     */
+    value: any;
+    /**
+     * 排序分数
+     */
+    score: number;
+  }
 
   /**
    * Redis操作类
    */
   interface RedisExecutor {
-
+    /**
+     * 删除 key
+     */
+    kDelete(key: string): boolean;
+    /**
+     * 删除 key
+     */
+    kDelete(...keys: string): number;
+    /**
+     * 删除 key
+     */
+    kDelete(keys: Array<string>): number;
+    /**
+     * 序列化给定 key ，并返回被序列化的值 byte[]
+     */
+    kDump(): Array<number>;
+    /**
+     * 检查给定 key 是否存在
+     * @param key key
+     */
+    kHasKey(key: string): boolean;
+    /**
+     * 为给定 key 设置过期时间，以毫秒计
+     * @param key     key
+     * @param timeout timeout以毫秒计
+     */
+    kExpire(key: string, timeout: number): boolean;
+    /**
+     * 为给定 key 设置过期时间
+     * @param key  key
+     * @param date 过期时间
+     */
+    kExpireAt(key: string, date: Date | string): boolean;
+    /**
+     * 查找所有符合给定模式( pattern)的 key
+     * @param pattern 模式( pattern)
+     */
+    keys(pattern: string): Array<string>;
+    /**
+     * 将当前数据库的 key 移动到给定的数据库 db 当中
+     * @param key     key
+     * @param dbIndex dbIndex
+     */
+    kMove(key: string, dbIndex: number): boolean;
+    /**
+     * 移除 key 的过期时间，key 将持久保持
+     * @param key key
+     */
+    kPersist(key: string): boolean;
+    /**
+     * 以毫秒为单位返回 key 的剩余的过期时间
+     * @param key key
+     */
+    kGetExpire(key: string): number;
+    /**
+     * 从当前数据库中随机返回一个 key
+     */
+    kRandomKey(): string;
+    /**
+     * 修改 key 的名称
+     * @param oldKey oldKey
+     * @param newKey newKey
+     */
+    kRename(oldKey: string, newKey: string): void;
+    /**
+     * 仅当 newkey 不存在时，将 key 改名为 newkey
+     * @param oldKey oldKey
+     * @param newKey newKey
+     */
+    kRenameIfAbsent(oldKey: string, newKey: string): boolean;
+    /**
+     * 返回 key 所储存的值的类型
+     * @param key key
+     */
+    kType(key: string): RedisDataType;
+    /**
+     * 设置指定 key 的值
+     * @param key   key
+     * @param value value
+     */
+    vSet(key: string, value: any): void;
+    /**
+     * 只有在 key 不存在时设置 key 的值
+     * @param key   key
+     * @param value value
+     * @param timeout 过期时间毫秒
+     */
+    vSetIfAbsent(key: string, value: any, timeout?: number): boolean;
+    /**
+     * 返回 key 中字符串值的子字符
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    vGet(key: string, start: number, end: number): string;
+    /**
+     * 将给定 key 的值设为 value ，并返回 key 的旧值(old value)
+     * @param key   key
+     * @param value value
+     */
+    vGetAndSet(key: string, value: any): any;
+    /**
+     * 对 key 所储存的字符串值，获取指定偏移量上的位(bit)
+     * @param key    key
+     * @param offset 偏移量
+     */
+    vGetBit(key: string, offset: number): boolean;
+    /**
+     * 获取所有(一个或多个)给定 key 的值
+     * @param keys keys
+     */
+    vMultiGet(keys: Array<string>): Array<any>;
+    /**
+     * 获取所有(一个或多个)给定 key 的值
+     * @param keys keys
+     */
+    vMultiGet(...keys: string): Array<any>;
+    /**
+     * 对 key 所储存的字符串值，设置或清除指定偏移量上的位(bit)
+     *
+     * @param key    key
+     * @param offset 偏移量
+     * @param value  值
+     */
+    vSetBit(key: string, offset: number, value: boolean): boolean;
+    /**
+     * 用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始
+     * @param key    key
+     * @param value  value
+     * @param offset 偏移量
+     */
+    vSetRange(key: string, value: any, offset: number): void;
+    /**
+     * 返回 key 所储存的字符串值的长度
+     * @param key key
+     */
+    vSize(key: string): number;
+    /**
+     * 同时设置一个或多个 key-value 对
+     * @param map 多个 key-value 对
+     */
+    vMultiSet(map: Map<string, any>): void;
+    /**
+     * 同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在
+     * @param map 多个 key-value 对
+     */
+    vMultiSetIfAbsent(map: Map<string, any>): void;
+    /**
+     * 将 key 所储存的值加上给定的增量值（increment）
+     * @param key key
+     * @param delta 增量值(可选，默认1)
+     */
+    vIncrement(key: string, delta?: number): number;
+    /**
+     * key 所储存的值减去给定的减量值（decrement）
+     * @param key   key
+     * @param delta 减量值(可选，默认1)
+     */
+    vDecrement(key: string, delta?: number): number;
+    /**
+     * 如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾
+     * @param key   key
+     * @param value value
+     */
+    vAppend(key: string, value: any): number;
+    /**
+     * 删除一个或多个哈希表字段
+     * @param key      key
+     * @param hashKeys hashKeys
+     */
+    hDelete(key: string, ...hashKeys: any): number;
+    /**
+     * 删除一个或多个哈希表字段
+     * @param key      key
+     * @param hashKeys hashKeys
+     */
+    hDelete(key: string, hashKeys: Array<any>): number;
+    /**
+     * 查看哈希表 key 中，指定的字段是否存在
+     * @param key     key
+     * @param hashKey hashKey
+     */
+    hHasKey(key: string, hashKey: any): boolean;
+    /**
+     * 获取存储在哈希表中指定字段的值
+     * @param key     key
+     * @param hashKey hashKey
+     */
+    hGet(key: string, hashKey: any): any;
+    /**
+     * 获取所有给定字段的值
+     * @param key      key
+     * @param hashKeys hashKeys
+     */
+    hMultiGet(key: string, ...hashKey: any): Array<any>;
+    /**
+     * 获取所有给定字段的值
+     * @param key      key
+     * @param hashKeys hashKeys
+     */
+    hMultiGet(key: string, hashKey: Array<any>): Array<any>;
+    /**
+     * 为哈希表 key 中的指定字段的整数值加上增量 increment
+     * @param key     key
+     * @param hashKey hashKey
+     * @param delta   增量
+     */
+    hIncrement(key: string, hashKey: any, delta: number): number;
+    /**
+     * 获取所有哈希表中的字段
+     * @param key key
+     */
+    hKeys(key: string): Array<any>;
+    /**
+     * 返回与hashKey关联的值的长度。如果键或hashKey不存在，则返回0
+     * @param key     key
+     * @param hashKey hashKey
+     */
+    hLengthOfValue(key: string, hashKey: any): number;
+    /**
+     * 获取哈希表中字段的数量
+     * @param key key
+     */
+    hSize(key: string): number;
+    /**
+     * 同时将多个 field-value (域-值)对设置到哈希表 key 中
+     * @param key key
+     * @param m   field-value
+     */
+    hPutAll(key: string, m: Map<any, any>): void;
+    /**
+     * 将哈希表 key 中的字段 field 的值设为 value
+     * @param key     key
+     * @param hashKey field
+     * @param value   value
+     */
+    hPut(key: string, hashKey: any, value: any): void;
+    /**
+     * 只有在字段 field 不存在时，设置哈希表字段的值
+     * @param key     key
+     * @param hashKey field
+     * @param value   字段的值
+     */
+    hPutIfAbsent(key: string, hashKey: any, value: any): boolean;
+    /**
+     * 获取哈希表中所有值
+     * @param key key
+     */
+    hValues(key: string): Array<any>;
+    /**
+     * 将整个散列存储在键上
+     * @param key key
+     */
+    hEntries(key: string): Map<any, any>;
+    /**
+     * 迭代哈希表中的键值对
+     * @param key                key
+     * @param count              数量
+     * @param pattern            字段匹配字符串
+     * @param scriptObjectMirror 回调函数
+     */
+    hScan(key: string, count: number, pattern: string, callback: (key: any, value: any) => boolean | void): void;
+    /**
+     * 获取列表指定范围内的元素
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    lRange(key: string, start: number, end: number): Array<any>;
+    /**
+     * 对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    lTrim(key: string, start: number, end: string): void;
+    /**
+     * 获取列表长度
+     * @param key key
+     */
+    lSize(key: string): number;
+    /**
+     * 将一个或多个值插入到列表头部
+     *
+     * @param key   key
+     * @param value value
+     */
+    lLeftPush(key: string, value: any): number;
+    /**
+     * 将一个或多个值插入到列表头部
+     * @param key    key
+     * @param values values
+     */
+    lLeftPushAll(key: string, ...values: any): number;
+    /**
+     * 将一个或多个值插入到列表头部
+     * @param key    key
+     * @param values values
+     */
+    lLeftPushAll(key: string, values: Array<any>): number;
+    /**
+     * 将一个值插入到已存在的列表头部
+     *
+     * @param key   key
+     * @param value value
+     */
+    lLeftPushIfPresent(key: string, value: any): number;
+    /**
+     * 将值前置到键值之前
+     * @param key   key
+     * @param pivot pivot
+     * @param value value
+     */
+    lLeftPush(key: string, pivot: any, value: any): number;
+    /**
+     * 在列表中添加一个或多个值
+     * @param key   key
+     * @param value value
+     */
+    lRightPush(key: string, value: any): number;
+    /**
+     * 在列表中添加一个或多个值
+     * @param key    key
+     * @param values values
+     */
+    lRightPushAll(key: string, ...values: any): number;
+    /**
+     * 在列表中添加一个或多个值
+     * @param key    key
+     * @param values values
+     */
+    lRightPushAll(key: string, values: Array<any>): number;
+    /**
+     * 仅当列表存在时才向键追加值
+     *
+     * @param key   key
+     * @param value value
+     */
+    lRightPushIfPresent(key: string, value: any): number;
+    /**
+     * 在键值之前追加值
+     * @param key   key
+     * @param pivot pivot
+     * @param value value
+     */
+    lRightPush(key: string, pivot: any, value: any): number;
+    /**
+     * 通过索引设置列表元素的值
+     * @param key   key
+     * @param index 索引
+     * @param value value
+     */
+    lSet(key: string, index: number, value: any): void;
+    /**
+     * 移除列表元素，从存储在键上的列表中删除第一次出现的值计数
+     * @param key   key
+     * @param count count
+     * @param value value
+     */
+    lRemove(key: string, count: number, value: any): number;
+    /**
+     * 通过索引获取列表中的元素
+     * @param key   key
+     * @param index 索引
+     */
+    lIndex(key: string, index: number): any;
+    /**
+     * 移出并获取列表的第一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
+     * @param key     key
+     * @param timeout timeout 毫秒(可选)
+     */
+    lLeftPop(key: string, timeout?: number): any;
+    /**
+     * 移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
+     *
+     * @param key     key
+     * @param timeout timeout 毫秒(可选)
+     */
+    lRightPop(key: string, timeout?: number): any;
+    /**
+     * 从列表中弹出一个值，将弹出的元素插入到另外一个列表中并返回它； 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止
+     *
+     * @param sourceKey      sourceKey
+     * @param destinationKey destinationKey
+     * @param timeout        timeout 毫秒(可选)
+     */
+    lRightPopAndLeftPush(sourceKey: string, destinationKey: string, timeout?: number): any;
+    /**
+     * 向集合添加一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    sAdd(key: string, ...values: any): number;
+    /**
+     * 向集合添加一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    sAdd(key: string, values: Array<any>): number;
+    /**
+     * 移除集合中一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    sRemove(key: string, ...values: any): number;
+    /**
+     * 移除集合中一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    sRemove(key: string, values: Array<any>): number;
+    /**
+     * 移除并返回集合中的count个随机元素
+     * @param key   key
+     * @param count count (可选,默认1)
+   */
+    sPop(key: string, count?: number): any | Array<any>;
+    /**
+     * 将 value 元素从 key 集合移动到 destKey 集合
+     * @param key     key
+     * @param value   value
+     * @param destKey destKey
+     */
+    sMove(key: string, value: any, destKey: string): boolean;
+    /**
+     * 获取集合的成员数
+     * @param key key
+     */
+    sSize(key: string): number;
+    /**
+     * 判断 member 元素是否是集合 key 的成员
+     * @param key    key
+     * @param member member 元素
+     */
+    sIsMember(key: string, member: any): boolean;
+    /**
+     * 返回给定所有集合的交集
+     * @param key       key
+     * @param otherKeys otherKeys
+     */
+    sIntersect(key: string, ...otherKeys: string): Array<any>;
+    /**
+     * 返回给定所有集合的交集
+     * @param key       key
+     * @param otherKeys otherKeys
+     */
+    sIntersect(key: string, otherKeys: Array<string>): Array<any>;
+    /**
+     * 返回给定所有集合的交集并存储在 destination 中
+     *
+     * @param key       key
+     * @param otherKeys otherKeys
+     * @param destKey   destKey
+     */
+    sIntersectAndStore(key: string, otherKeys: Array<string>, destKey: string): number;
+    /**
+     * 返回给定所有集合的交集并存储在 destination 中
+     * @param key       key
+     * @param otherKey otherKey
+     * @param destKey   destKey
+     */
+    sIntersectAndStore(key: string, otherKey: string, destKey: string): number;
+    /**
+     * 返回所有给定集合的并集
+     * @param key       key
+     * @param otherKeys otherKeys
+     */
+    sUnion(key: string, otherKeys: Array<string>): Array<any>;
+    /**
+     * 所有给定集合的并集存储在 destKey 集合中
+     * @param key      key
+     * @param otherKey otherKey
+     * @param destKey  destKey
+     */
+    sUnionAndStore(key: string, otherKey: string, destKey: string): number;
+    /**
+     * 所有给定集合的并集存储在 destKey 集合中
+     * @param key      key
+     * @param otherKeys otherKeys
+     * @param destKey  destKey
+     */
+    sUnionAndStore(key: string, otherKeys: Array<string>, destKey: string): number;
+    /**
+     * 返回给定所有集合的差集
+     * @param key      key
+     * @param otherKey otherKey
+     */
+    sDifference(key: string, otherKeys: Array<string>): Array<any>;
+    /**
+     * 返回给定所有集合的差集
+     * @param key      key
+     * @param otherKey otherKey
+     */
+    sDifference(key: string, ...otherKeys: string): Array<any>;
+    /**
+     * 返回给定所有集合的差集并存储在 destKey 中
+     * @param key       key
+     * @param otherKeys otherKeys
+     * @param destKey   destKey
+     */
+    sDifferenceAndStore(key: string, otherKeys: Array<string>, destKey: string): number;
+    /**
+     * 返回给定所有集合的差集并存储在 destKey 中
+     * @param key       key
+     * @param otherKey otherKey
+     * @param destKey   destKey
+     */
+    sDifferenceAndStore(key: string, otherKey: string, destKey: string): number;
+    /**
+     * 返回集合中的所有成员
+     * @param key key
+     */
+    sMembers(key: string): Array<any>
+    /**
+     * 返回集合中一个或多个随机数
+     * @param key key
+     */
+    sRandomMember(key: string): any;
+    /**
+     * 从集合中获取不同的随机元素
+     * @param key   key
+     * @param count 数量
+     */
+    sDistinctRandomMembers(key: string, count: number): Array<any>;
+    /**
+     * 返回集合中一个或多个随机数
+     * @param key   key
+     * @param count 数量
+     */
+    sRandomMembers(key: string, count: number): Array<any>;
+    /**
+     * 迭代集合中的元素
+     * @param key                key
+     * @param count              count
+     * @param pattern            pattern
+     * @param scriptObjectMirror 回调函数
+     */
+    sScan(key: string, count: number, pattern: string, callback: (value: any) => boolean | void): void;
+    /**
+     * 向有序集合添加一个或多个成员，或者更新已存在成员的分数
+     * @param key   key
+     * @param value value
+     * @param score score
+     */
+    zsAdd(key: string, value: any, score: number): boolean;
+    /**
+     * 向有序集合添加一个或多个成员，或者更新已存在成员的分数
+     * @param key    key
+     * @param values values
+     */
+    zsAdd(key: string, values: Array<SortedSetItem>): number;
+    /**
+     * 移除有序集合中的一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    zsRemove(key: string, ...values: any): number;
+    /**
+     * 移除有序集合中的一个或多个成员
+     * @param key    key
+     * @param values values
+     */
+    zsRemove(key: string, values: Array<any>): number;
+    /**
+     * 有序集合中对指定成员的分数加上增量 increment
+     * @param key   key
+     * @param value value
+     * @param delta increment
+     */
+    zsIncrementScore(key: string, values: any, delta: number): number;
+    /**
+     * 返回有序集合中指定成员的索引
+     * @param key key
+     * @param o   o
+     */
+    zsRank(key: string, o: any): number;
+    /**
+     * 确定元素的索引值在排序集时得分从高到低
+     * @param key key
+     * @param o   o
+     */
+    zsReverseRank(key: string, o: any): number;
+    /**
+     * 从已排序集获取开始和结束之间的元素
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    zsRange(key: string, start: number, end: number): Array<any>;
+    /**
+     * 从已排序集获取开始和结束之间的元素
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    zsRangeWithScores(key: string, start: number, end: number): Array<SortedSetItem>
+    /**
+     * 从排序后的集合中获取得分介于最小值和最大值之间的元素
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsRangeByScore(key: string, min: number, max: number): Array<any>;
+    /**
+     * 从排序后的集合中获取得分介于最小值和最大值之间的元素
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsRangeByScoreWithScores(key: string, min: number, max: number): Array<SortedSetItem>;
+    /**
+     * 获取从开始到结束的范围内的元素，其中得分在排序集的最小值和最大值之间
+     * @param key    key
+     * @param min    min
+     * @param max    max
+     * @param offset offset
+     * @param count  count
+     */
+    zsRangeByScore(key: string, min: number, max: number, offset: number, count: number): Array<any>;
+    /**
+     * 获取从开始到结束的范围内的元素，其中得分在排序集的最小值和最大值之间
+     * @param key    key
+     * @param min    min
+     * @param max    max
+     * @param offset offset
+     * @param count  count
+     */
+    zsRangeByScoreWithScores(key: string, min: number, max: number, offset: number, count: number): Array<SortedSetItem>;
+    /**
+     * 获取范围从开始到结束的元素，从高到低排序的集合
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    zsReverseRange(key: string, start: number, end: number): Array<any>;
+    /**
+     * 获取范围从开始到结束的元素，从高到低排序的集合
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    zsReverseRangeWithScores(key: string, start: number, end: number): Array<SortedSetItem>;
+    /**
+     * 获取得分介于最小值和最大值之间的元素，从高到低排序
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsReverseRangeByScore(key: string, min: number, max: number): Array<any>;
+    /**
+     * 获取得分介于最小值和最大值之间的元素，从高到低排序
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsReverseRangeByScore(key: string, min: number, max: number): Array<SortedSetItem>;
+    /**
+     * 获取从开始到结束的范围内的元素，其中得分在最小和最大之间，排序集高 -> 低
+     * @param key    key
+     * @param min    min
+     * @param max    max
+     * @param offset offset
+     * @param count  count
+     */
+    zsReverseRangeByScore(key: string, min: number, max: number, offset: number, count: number): Array<any>;
+    /**
+     * 获取从开始到结束的范围内的元素，其中得分在最小和最大之间，排序集高 -> 低
+     * @param key    key
+     * @param min    min
+     * @param max    max
+     * @param offset offset
+     * @param count  count
+     */
+    zsReverseRangeByScoreWithScores(key: string, min: number, max: number, offset: number, count: number): Array<SortedSetItem>;
+    /**
+     * 用最小值和最大值之间的值计算排序集中的元素数
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsCount(key: string, min: number, max: number): number;
+    /**
+     * 返回按给定键存储的已排序集的元素数
+     * @param key key
+     */
+    zsSize(key: string): number;
+    /**
+     * 获取有序集合的成员数
+     * @param key key
+     */
+    zsZCard(key: string): number;
+    /**
+     * 返回有序集中，成员的分数值
+     * @param key key
+     * @param o   o
+     */
+    zsScore(key: string, o: any): number;
+    /**
+     * 从按键排序的集合中删除开始和结束之间范围内的元素
+     * @param key   key
+     * @param start start
+     * @param end   end
+     */
+    zsRemoveRange(key: string, start: number, end: number): number;
+    /**
+     * 从按键排序的集合中删除得分在min和max之间的元素
+     * @param key key
+     * @param min min
+     * @param max max
+     */
+    zsRemoveRangeByScore(key: string, min: number, max: number): number;
+    /**
+     * 计算给定的一个或多个有序集的并集，并存储在新的 destKey 中
+     * @param key      key
+     * @param otherKey otherKey
+     * @param destKey  destKey
+     */
+    zsUnionAndStore(key: string, otherKey: string, destKey: string): number;
+    /**
+     * 计算给定的一个或多个有序集的并集，并存储在新的 destKey 中
+     * @param key       key
+     * @param otherKeys otherKeys
+     * @param destKey   destKey
+     */
+    zsUnionAndStore(key: string, otherKeys: Array<string>, destKey: string): number;
+    /**
+     * 计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中
+     * @param key      key
+     * @param otherKey otherKey
+     * @param destKey  destKey
+     */
+    zsIntersectAndStore(key: string, otherKey: string, destKey: string): number;
+    /**
+     * 计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中
+     * @param key       key
+     * @param otherKeys otherKeys
+     * @param destKey   destKey
+     */
+    zsIntersectAndStore(key: string, otherKeys: Array<string>, destKey: string): number;
+    /**
+     * 迭代有序集合中的元素（包括元素成员和元素分值）
+     * @param key key
+     * @param count count
+     * @param pattern pattern
+     * @param callback 回调函数
+     */
+    zsScan(key: string, count: number, pattern: string, callback: (value: any, score: number) => boolean | void): void;
+    /**
+     * 通过字典区间返回有序集合的成员
+     * @param key       key
+     * @param minValue  minValue
+     * @param equalsMin equalsMin
+     * @param maxValue  maxValue
+     * @param equalsMax equalsMax
+     */
+    zsRangeByLex(key: string, minValue: any, equalsMin: boolean, maxValue: any, equalsMax: boolean): Array<any>;
+    /**
+     * 通过字典区间返回有序集合的成员
+     * @param key       key
+     * @param minValue  minValue
+     * @param equalsMin equalsMin
+     * @param maxValue  maxValue
+     * @param equalsMax equalsMax
+     * @param count     count
+     * @param offset    offset
+     */
+    zsRangeByLex(key: string, minValue: any, equalsMin: boolean, maxValue: any, equalsMax: boolean, count: number, offset: number): Array<any>;
+    /**
+     * 添加指定元素到 HyperLogLog 中
+     * @param key    key
+     * @param values values
+     */
+    hyperLogLogAdd(key: string, ...values: any): number;
+    /**
+     * 获取键中元素的当前数目
+     * @param keys keys
+     */
+    hyperLogLogSize(...keys: string): number;
+    /**
+     * 将多个 HyperLogLog 合并为一个 HyperLogLog
+     * @param destination destination
+     * @param sourceKeys  sourceKeys
+     */
+    hyperLogLogUnion(destination: string, ...sourceKeys: string): number;
+    /**
+     * 删除给定的密钥
+     *
+     * @param key key
+     */
+    hyperLogLogDelete(key: string): void
   }
 
   /**
    * 获取RedisExecutor工具类
    */
   interface RedisUtils {
-
+    /**
+     * 获取默认的 RedisExecutor
+     */
+    getDefaultRedisExecutor(): RedisExecutor;
+    /**
+     * 获取对应数据源的 RedisExecutor
+     * @param redisName Redis数据源名称
+     */
+    getJdbcExecutor(redisName: string): RedisExecutor;
   }
 
   /**
