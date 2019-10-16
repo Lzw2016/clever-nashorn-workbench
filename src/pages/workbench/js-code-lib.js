@@ -485,11 +485,34 @@ jsCodeLib.push(
      */
     update(sql: string, paramMap?: Map<string, any>): number;
     /**
+     * 更新数据库表数据
+     * @param tableName         表名称
+     * @param fields            更新字段值
+     * @param whereMap          更新条件字段
+     * @param camelToUnderscore 字段驼峰转下划线(可选)
+     */
+    updateTable(tableName: string, fields: Map<string, any>, whereMap: Map<string, any>, camelToUnderscore?: boolean): number;
+    /**
      * 执行insert SQL，返回数据库自增主键值和新增数据量
      * @param sql sql脚本，参数格式[:param]
      * @param paramMap 参数(可选)，参数格式[:param]
      */
     insert(sql: string, paramMap?: Map<string, any>): InsertResult;
+    /**
+     * 数据插入到表
+     * @param tableName         表名称
+     * @param fields            字段名
+     * @param camelToUnderscore 字段驼峰转下划线(可选)
+     */
+    insertTable(tableName: string, fields: Map<string, any>, camelToUnderscore?: boolean): InsertResult;
+    /**
+     * 数据插入到表
+     *
+     * @param tableName         表名称
+     * @param fieldsArray       字段名集合
+     * @param camelToUnderscore 字段驼峰转下划线(可选)
+     */
+    insertTables(tableName: string, fieldsArray: Array<Map<string, any>>, camelToUnderscore?: boolean): Array<InsertResult>;
     /**
      * 批量执行更新SQL，返回更新影响数据量
      *
@@ -1367,6 +1390,7 @@ jsCodeLib.push(
    * 获取Redis交互工具(RedisExecutor)的实例
    */
   declare const RedisUtils: RedisUtils;
+
   `
 );
 
