@@ -1,8 +1,8 @@
-import layer from "layer";
 import lodash from "lodash";
 import * as esprima from "esprima";
 import * as estraverse from "estraverse";
 import * as eslintScope from "eslint-scope";
+import { loading } from "@/utils/loading";
 import fileTabArt from "./template/file-tab.art.html";
 import openedFileArt from "./template/opened-file.art.html";
 import fileFullPathArt from "./template/file-full-path.art.html";
@@ -488,7 +488,7 @@ AppContext.saveJsCodeFile = async (id) => {
   }
   const { name, jsCode, filePath, description } = fileData;
   // TODO jsCode 死循环校验
-  const closeIndex = layer.load(1);
+  const loadingAttr = loading.start();
   const newFileData = await update(fileData.id, { name, jsCode, filePath, description });
   fileData.needSave = false;
   fileData.id = newFileData.id;
@@ -511,7 +511,7 @@ AppContext.saveJsCodeFile = async (id) => {
   const fullPath = fileData.filePath + fileData.name;
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
-  layer.close(closeIndex);
+  loading.done(loadingAttr);
   return fileData;
 };
 

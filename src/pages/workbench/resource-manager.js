@@ -1,4 +1,6 @@
 // import lodash from "lodash";
+import layer from "layer";
+import { loading } from "@/utils/loading";
 // import "jquery.fancytree/dist/skin-win8-n/ui.fancytree.less";
 import copy from 'copy-to-clipboard';
 import "./resource-manager.less";
@@ -96,38 +98,81 @@ const treeConfig = {
   },
   // 编辑器器插件
   edit: {
-    // triggerStart: ["dblclick"], // clickActive
-    // beforeEdit: function (event, data) {
-    //   // Return false to prevent edit mode
-    // },
-    // edit: function (event, data) {
-    //   // Editor was opened (available as data.input)
-    // },
+    triggerStart: ["f2"],
+    beforeEdit: function (event, data) {
+      console.log("edit - beforeEdit", data);
+      if (data && data.originalEvent) data.originalEvent.preventDefault();
+      // Return false to prevent edit mode
+      data.saveSuccessful = false;
+    },
+    edit: function (event, data) {
+      console.log("edit - edit", data);
+      if (data && data.originalEvent) data.originalEvent.preventDefault();
+      // Editor was opened (available as data.input)
+      data.input.select();
+    },
     beforeClose: function (event, data) {
       console.log("edit - beforeClose", data);
+      if (data && data.originalEvent) data.originalEvent.preventDefault();
+      // const { isNew, node, input, saveSuccessful } = data;
       // 保持编辑器状态
-      // data.originalEvent.preventDefault();
-      // return false;
+      // return true;
       // 取消保存
-      // data.save = false;
+      // data.save = true;
     },
-    save: async function (event, data) {
-      // Save data.input.val() or return false to keep editor open
-      // 1-文件，2-文件夹
-      const filedata = await add({
-        bizType: "string",
-        description: "string",
-        filePath: "string",
-        groupName: "string",
-        jsCode: "string",
-        name: "string",
-        nodeType: 0
-      });
-      console.log("edit - save", data, filedata);
-      return true;
+    save: function (event, data) {
+      console.log("edit - save", data, data.input.val());
+      if (data && data.originalEvent) data.originalEvent.preventDefault();
+      const { node, input, saveSuccessful } = data;
+      // input.select();
+      let name = input.val();
+      console.log("name -->", name);
+      if (!node.folder && name.endsWith(".js")) {
+        name = name.substring(0, name.length - 3);
+      }
+      const loadingAttr = loading.start();
+      add({
+        bizType: AppContext.bizType,
+        groupName: AppContext.groupName,
+        nodeType: node.folder ? 2 : 1,
+        filePath: node.data.filePath,
+        name: name,
+        jsCode: node.folder ? undefined : "",
+        description: "",
+      }).then(resData => {
+        console.log("resData --> ", resData);
+        data.node.key = resData.id;
+        data.node.folder = resData.nodeType === 2;
+        data.node.title = resData.name;
+        data.node.iconTooltip = resData.filePath;
+        // let fullPath = "";
+        // let parentId = "";
+        const paths = `${resData.filePath}${resData.name}`.split("/");
+        console.log("paths --> ", paths); // /新建文件夹/新建文件夹5/新建脚本文件.js --> ["", "新建文件夹", "新建文件夹5", "新建脚本文件.js"]
+        data.node.data = {
+          ...resData,
+          build: true,
+          dataId: resData.id,
+          id: `${resData.filePath}${resData.name}`,
+          fullPath: `${resData.filePath}${resData.name}`, // ? TODO 删除尾部 "/" -> fullPath: "/public"
+          parentId: "", // ? 上级路径 -> parentId: "/"
+          root: null,
+        };
+        data.saveSuccessful = true;
+        data.isNew = false;
+        // node.setTitle(input.val());
+        console.log("editEnd -> start !!!");
+        node.editEnd(false);
+        console.log("editEnd -> end !!!");
+        node.setActive(true, { noEvents: true, noFocus: true });
+      }).catch(error => {
+        console.log("error --> ", error);
+      }).finally(() => loading.done(loadingAttr));
+      return !!saveSuccessful;
     },
     close: function (event, data) {
       console.log("edit - close", data);
+      if (data && data.originalEvent) data.originalEvent.preventDefault();
     }
   },
   // 右键菜单
@@ -190,6 +235,7 @@ const treeConfig = {
 
 // 初始化工作空间树
 const initWorkspaceTree = async () => {
+  const loadingAttr = loading.start();
   const data = await tree(AppContext.bizType, AppContext.groupName);
   const workspaceTree = createTree('#workspace-file-tree', {
     ...treeConfig,
@@ -203,6 +249,7 @@ const initWorkspaceTree = async () => {
     }
   );
   AppContext.workspaceTree = workspaceTree;
+  loading.done(loadingAttr);
 };
 $(document).ready(() => {
   initWorkspaceTree();
@@ -224,6 +271,7 @@ const reloadWorkspaceTree = async () => {
   if (!AppContext.workspaceTree) {
     return;
   }
+  const loadingAttr = loading.start();
   // const oldData = AppContext.workspaceTree.toDict(false);
   // console.log("oldData", oldData);
   AppContext.workspacePanel.tools.title.html(`${AppContext.bizType}-${AppContext.groupName}`);
@@ -231,28 +279,38 @@ const reloadWorkspaceTree = async () => {
   const data = await tree(AppContext.bizType, AppContext.groupName);
   AppContext.workspaceTree.reload(data).done(() => {
     // 重新加载完成
-    console.log("reloaded");
+    positionFileForWorkspaceTree();
   });
+  loading.done(loadingAttr);
 };
 AppContext.workspacePanel.tools.actions.refresh.on("click", () => reloadWorkspaceTree());
 
 // 打开代码页签
 let openFileTabLock = false;
+const openFileTabMax = 10;
 const openFileTab = async (nodeData) => {
   if (openFileTabLock) {
     return;
   }
-  // TODO 最多只能打开10个文件
+  const loadingAttr = loading.start();
   try {
     openFileTabLock = true;
     let fileData = AppContext.openFileArray.find(file => file.id === nodeData.dataId);
-    if (!fileData) {
+    if (!fileData && AppContext.openFileArray.length >= openFileTabMax) {
+      // 最多只能打开10个文件
+      layer.msg(`最多只能打开${openFileTabMax}个文件`, { time: 1500 });
+    } else if (!fileData) {
+      // 请求服务器获取文件内容
       fileData = await jsCodeFile(nodeData.dataId);
       AppContext.openFileArray.push({ ...fileData, needSave: false, lastOpenTime: new Date().getTime() });
     }
-    AppContext.renderOpenFile(fileData.id, { treePosition: false });
+    if (fileData) {
+      AppContext.renderOpenFile(fileData.id, { treePosition: false });
+    }
   } catch (error) {
     openFileTabLock = false;
+  } finally {
+    loading.done(loadingAttr);
   }
   openFileTabLock = false;
 };
@@ -272,27 +330,38 @@ const createFileOrFolder = (folder, nodeParam) => {
   if (!node) {
     node = AppContext.workspaceTree.getActiveNode();
   }
+  if (!node) {
+    node = AppContext.workspaceTree.getRootNode();
+  }
+  // console.log("node-->", node, node.isRootNode());
   const newNode = {
+    key: -1,
     folder: false,
-    title: "new-file.js",
+    title: "新建脚本文件",
     iconTooltip: "",
     tooltip: "",
     data: {},
   };
   if (folder) {
     newNode.folder = true;
-    newNode.title = "new-folder";
+    newNode.title = "新建文件夹";
   }
-  if (node.folder) {
+  if (node.isRootNode()) {
+    // 根节点
+    newNode.data.filePath = "/";
+    node.editCreateNode("child", newNode);
+  } else if (node.folder) {
     // 文件夹
+    newNode.data.filePath = `${node.data.fullPath}/`;
     node.editCreateNode("child", newNode);
   } else {
     // 文件
+    newNode.data.filePath = node.data.filePath;
     node.editCreateNode("after", newNode);
   }
 };
-AppContext.workspacePanel.tools.actions.createFile.on("click", () => createFileOrFolder(false));
-AppContext.workspacePanel.tools.actions.createFolder.on("click", () => createFileOrFolder(true));
+AppContext.workspacePanel.tools.actions.createFile.on("click", () => createFileOrFolder(false, AppContext.workspaceTree.getRootNode()));
+AppContext.workspacePanel.tools.actions.createFolder.on("click", () => createFileOrFolder(true, AppContext.workspaceTree.getRootNode()));
 
 // 文件树全部折叠
 const collapseAllWorkspaceTree = () => {
