@@ -1,4 +1,4 @@
-// import lodash from "lodash";
+import lodash from "lodash";
 import layer from "layer";
 import { loading } from "@/utils/loading";
 // import "jquery.fancytree/dist/skin-win8-n/ui.fancytree.less";
@@ -14,7 +14,7 @@ import 'simplebar/dist/simplebar.css';
 import SimpleBar from 'simplebar/dist/simplebar.js';
 import AppContext from "./context";
 import Browser from "@/utils/browser";
-import { tree, jsCodeFile, add } from "@/api/js-code-file-controller";
+import { tree, jsCodeFile, add, deleteFile, update } from "@/api/js-code-file-controller";
 
 // 转换树节点
 const transformTreeNode = (nodeArray = []) => {
@@ -100,78 +100,130 @@ const treeConfig = {
   edit: {
     triggerStart: ["f2"],
     beforeEdit: function (event, data) {
-      console.log("edit - beforeEdit", data);
+      // console.log("edit - beforeEdit", data);
       if (data && data.originalEvent) data.originalEvent.preventDefault();
-      // Return false to prevent edit mode
       data.saveSuccessful = false;
+      data.requestServerCount = 0;
     },
     edit: function (event, data) {
-      console.log("edit - edit", data);
+      // console.log("edit - edit", data);
       if (data && data.originalEvent) data.originalEvent.preventDefault();
-      // Editor was opened (available as data.input)
       data.input.select();
     },
     beforeClose: function (event, data) {
-      console.log("edit - beforeClose", data);
+      // console.log("edit - beforeClose", data);
       if (data && data.originalEvent) data.originalEvent.preventDefault();
-      // const { isNew, node, input, saveSuccessful } = data;
-      // 保持编辑器状态
-      // return true;
-      // 取消保存
-      // data.save = true;
     },
     save: function (event, data) {
-      console.log("edit - save", data, data.input.val());
+      // console.log("edit - save", data, data.input.val());
       if (data && data.originalEvent) data.originalEvent.preventDefault();
       const { node, input, saveSuccessful } = data;
-      // input.select();
+      if (saveSuccessful) {
+        return true;
+      }
       let name = input.val();
-      console.log("name -->", name);
+      // console.log("name -->", name);
       if (!node.folder && name.endsWith(".js")) {
         name = name.substring(0, name.length - 3);
       }
-      const loadingAttr = loading.start();
-      add({
-        bizType: AppContext.bizType,
-        groupName: AppContext.groupName,
-        nodeType: node.folder ? 2 : 1,
-        filePath: node.data.filePath,
-        name: name,
-        jsCode: node.folder ? undefined : "",
-        description: "",
-      }).then(resData => {
-        console.log("resData --> ", resData);
-        data.node.key = resData.id;
-        data.node.folder = resData.nodeType === 2;
-        data.node.title = resData.name;
-        data.node.iconTooltip = resData.filePath;
-        // let fullPath = "";
-        // let parentId = "";
-        const paths = `${resData.filePath}${resData.name}`.split("/");
-        console.log("paths --> ", paths); // /新建文件夹/新建文件夹5/新建脚本文件.js --> ["", "新建文件夹", "新建文件夹5", "新建脚本文件.js"]
-        data.node.data = {
-          ...resData,
-          build: true,
-          dataId: resData.id,
-          id: `${resData.filePath}${resData.name}`,
-          fullPath: `${resData.filePath}${resData.name}`, // ? TODO 删除尾部 "/" -> fullPath: "/public"
-          parentId: "", // ? 上级路径 -> parentId: "/"
-          root: null,
+      data.requestServerCount++;
+      if (data.requestServerCount === 1) {
+        const loadingAttr = loading.start();
+        const isAddApi = data.isNew;
+        const oldFilePath = data.node.data.fullPath;
+        const successfulCallBack = resData => {
+          // console.log("resData --> ", resData);
+          const newFilePath = `${resData.filePath}${resData.name}`;
+          data.node.key = resData.id;
+          data.node.folder = resData.nodeType === 2;
+          data.node.title = resData.name;
+          data.node.iconTooltip = newFilePath;
+          let fullPath = "";
+          let parentId = "";
+          let paths = newFilePath.split("/");
+          paths = paths.filter(path => lodash && lodash.trim(path) !== "");
+          fullPath = `/${paths.join("/")}`;
+          if (paths.length >= 1) {
+            paths.length = paths.length - 1;
+          }
+          parentId = `/${paths.join("/")}/`;
+          if (parentId === "//") {
+            parentId = "/";
+          }
+          // console.log("fullPath --> ", fullPath, "parentId --> ", parentId);
+          data.node.data = {
+            ...resData,
+            build: true,
+            dataId: resData.id,
+            id: newFilePath,
+            fullPath: fullPath,
+            parentId: parentId,
+            root: null,
+          };
+          data.saveSuccessful = true;
+          // data.isNew = false;
+          // console.log("editEnd -> start !!!");
+          node.editEnd(true);
+          // console.log("editEnd -> end !!!");
+          node.setTitle(resData.name);
+          node.setActive(true, { noEvents: true, noFocus: true });
+          if (resData.nodeType === 1 && isAddApi) {
+            openFileTab(data.node.data);
+          }
+          if (resData.nodeType === 2 && !isAddApi) {
+            const setNewFilePath = (nodes) => {
+              if (!nodes || nodes.length <= 0) return;
+              nodes.forEach(tmp => {
+                if (!tmp) return;
+                if (tmp.iconTooltip.startsWith(oldFilePath)) {
+                  tmp.iconTooltip = newFilePath + tmp.iconTooltip.substring(oldFilePath.length);
+                }
+                if (tmp.data.id.startsWith(oldFilePath)) {
+                  tmp.data.id = newFilePath + tmp.data.id.substring(oldFilePath.length);
+                }
+                if (tmp.data.fullPath.startsWith(oldFilePath)) {
+                  tmp.data.fullPath = newFilePath + tmp.data.fullPath.substring(oldFilePath.length);
+                }
+                if (tmp.data.filePath.startsWith(oldFilePath)) {
+                  tmp.data.filePath = newFilePath + tmp.data.filePath.substring(oldFilePath.length);
+                }
+                if (tmp.data.parentId.startsWith(oldFilePath)) {
+                  tmp.data.parentId = newFilePath + tmp.data.parentId.substring(oldFilePath.length);
+                }
+                // console.log("################## node --->", oldFilePath, "<-->", newFilePath, " | ", tmp);
+                if (tmp.children && tmp.children.length > 0) {
+                  setNewFilePath(tmp.children);
+                }
+              });
+            };
+            setNewFilePath(node.children);
+            node.render(true, true);
+          }
         };
-        data.saveSuccessful = true;
-        data.isNew = false;
-        // node.setTitle(input.val());
-        console.log("editEnd -> start !!!");
-        node.editEnd(false);
-        console.log("editEnd -> end !!!");
-        node.setActive(true, { noEvents: true, noFocus: true });
-      }).catch(error => {
-        console.log("error --> ", error);
-      }).finally(() => loading.done(loadingAttr));
+        if (isAddApi) {
+          add({
+            bizType: AppContext.bizType,
+            groupName: AppContext.groupName,
+            nodeType: node.folder ? 2 : 1,
+            filePath: node.data.filePath,
+            name: name,
+            jsCode: node.folder ? undefined : "",
+            description: "",
+          })
+            .then(successfulCallBack)
+            // .catch(error => console.log("error --> ", error))
+            .finally(() => loading.done(loadingAttr));
+        } else {
+          update(data.node.data.dataId, { name: name })
+            .then(successfulCallBack)
+            // .catch(error => console.log("error --> ", error))
+            .finally(() => loading.done(loadingAttr));
+        }
+      }
       return !!saveSuccessful;
     },
     close: function (event, data) {
-      console.log("edit - close", data);
+      // console.log("edit - close", data);
       if (data && data.originalEvent) data.originalEvent.preventDefault();
     }
   },
@@ -197,8 +249,37 @@ const treeConfig = {
       } else if (action === "copyFullPath") {
         copy(node.data.fullPath, { format: "text/plain" });
       } else if (action === "delete") {
-        // console.log("delete", node.data.dataId);
-        node.remove();
+        // console.log("delete --> ", node);
+        layer.confirm(
+          `确定删除${node.folder ? '文件夹' : '文件'}？此操作不可撤销！<br />${node.data.fullPath}`,
+          { btn: ["删除", '取消'] },
+          function (index) {
+            layer.close(index);
+            const loadingAttr = loading.start();
+            deleteFile(node.data.dataId)
+              .then(() => {
+                const ids = [];
+                const getAllIds = (nodes) => {
+                  if (!nodes || nodes.length <= 0) return;
+                  // console.log("nodes ---> ", nodes.length);
+                  nodes.forEach(tmp => {
+                    if (tmp && tmp.data) {
+                      ids.push(tmp.data.dataId);
+                    }
+                    if (tmp && tmp.children && tmp.children.length > 0) {
+                      getAllIds(tmp.children);
+                    }
+                  });
+                };
+                getAllIds([node]);
+                // console.log("ids ---> ", ids, deleteFile);
+                AppContext.openFileArray = AppContext.openFileArray.filter(file => ids.indexOf(file.id) === -1);
+                AppContext.renderOpenFile(null, {});
+                node.remove();
+              })
+              .finally(() => loading.done(loadingAttr));
+          },
+        );
       } else if (action === "rename") {
         node.editStart();
       }
@@ -372,16 +453,43 @@ AppContext.workspacePanel.tools.actions.collapseAll.on("click", () => collapseAl
 // 保存所有文件
 AppContext.openedFile.tools.actions.saveAll.on("click", () => {
   const needSaveArray = AppContext.openFileArray.filter(file => file.needSave);
-  console.log("保存所有文件", needSaveArray.length);
-  AppContext.renderOpenFile(null, { treePosition: false });
+  if (needSaveArray && needSaveArray.length > 0) {
+    let count = 0;
+    needSaveArray.forEach(tmp => AppContext.saveJsCodeFile(tmp.id, () => {
+      count++;
+      if (count >= needSaveArray.length) {
+        AppContext.renderOpenFile(undefined, { treePosition: false });
+      }
+    }));
+  }
 });
 // 关闭所有文件
 AppContext.openedFile.tools.actions.closeAll.on("click", () => {
   const needSaveArray = AppContext.openFileArray.filter(file => file.needSave);
   if (needSaveArray.length > 0) {
-    console.log("需要保存", needSaveArray.length);
+    layer.confirm(
+      `有${needSaveArray.length}个文件未保存，是否先保存文件？`,
+      { btn: ["全部保存", '放弃修改'] },
+      function (index) {
+        layer.close(index);
+        let count = 0;
+        needSaveArray.forEach(tmp => {
+          AppContext.saveJsCodeFile(tmp.id, () => {
+            count++;
+            if (count >= needSaveArray.length) {
+              AppContext.openFileArray = [];
+              AppContext.renderOpenFile(undefined, { treePosition: false });
+            }
+          });
+        });
+      },
+      function () {
+        AppContext.openFileArray = [];
+        AppContext.renderOpenFile(undefined, { treePosition: false });
+      }
+    );
+    return;
   }
   AppContext.openFileArray = [];
   AppContext.renderOpenFile(undefined, { treePosition: false });
-  console.log("关闭所有文件");
 });

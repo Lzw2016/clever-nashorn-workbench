@@ -20,3 +20,13 @@ export async function add(filedata) {
 export async function update(id, filedata) {
   return http.put(`/api/js_code_file/${id}`, filedata);
 }
+
+// 删除文件或文件夹
+export async function deleteFile(id) {
+  return http.delete(`/api/js_code_file/${id}`);
+}
+
+// 锁定文件不允许编辑
+export async function lockFile(id) {
+  return http.put(`/api/js_code_file/lock_file/${id}`);
+}

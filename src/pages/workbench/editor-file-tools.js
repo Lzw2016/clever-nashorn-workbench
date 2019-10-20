@@ -1,5 +1,8 @@
 // import lodash from "lodash";
+import layer from "layer";
 import copy from 'copy-to-clipboard';
+import { deleteFile } from "@/api/js-code-file-controller";
+import { loading } from "@/utils/loading";
 import AppContext from "./context";
 
 // 文件页签事件处理
@@ -15,10 +18,25 @@ $(document).on("click", ".editor-container .editor-tools .open-file-tabs .file-t
   // 关闭页签
   if (target.hasClass("file-close")) {
     if (target.hasClass("need-save")) {
-      console.log("需要保存");
+      layer.confirm(
+        `文件还未保存，是否先保存文件？`,
+        { btn: ["保存", '放弃修改'] },
+        function (index) {
+          layer.close(index);
+          AppContext.saveJsCodeFile(id, () => {
+            AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+            AppContext.renderOpenFile(null, {});
+          });
+        },
+        function () {
+          AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+          AppContext.renderOpenFile(null, {});
+        }
+      );
+    } else {
+      AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+      AppContext.renderOpenFile(null, {});
     }
-    AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
-    AppContext.renderOpenFile(null, {});
     return;
   }
   // 切换页签
@@ -41,10 +59,25 @@ $(document).on("click", "#opened-file-content .file-title", (e) => {
   // 关闭文件
   if (target.hasClass("file-close")) {
     if (target.hasClass("need-save")) {
-      console.log("需要保存");
+      layer.confirm(
+        `文件还未保存，是否先保存文件？`,
+        { btn: ["保存", '放弃修改'] },
+        function (index) {
+          layer.close(index);
+          AppContext.saveJsCodeFile(id, () => {
+            AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+            AppContext.renderOpenFile(null, {});
+          });
+        },
+        function () {
+          AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+          AppContext.renderOpenFile(null, {});
+        }
+      );
+    } else {
+      AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
+      AppContext.renderOpenFile(null, {});
     }
-    AppContext.openFileArray = AppContext.openFileArray.filter(file => file.id !== id);
-    AppContext.renderOpenFile(null, {});
     return;
   }
   // 切换文件
@@ -118,10 +151,96 @@ $.contextMenu({
     // 关闭编辑器
     const needSaveArray = AppContext.openFileArray.filter(file => file.needSave && ids.findIndex(id => id === file.id) >= 0);
     if (needSaveArray.length > 0) {
-      console.log("需要保存", needSaveArray.length);
+      layer.confirm(
+        `有${needSaveArray.length}个文件未保存，是否先保存文件？`,
+        { btn: ["全部保存", '放弃修改'] },
+        function (index) {
+          layer.close(index);
+          let count = 0;
+          needSaveArray.forEach(tmp => {
+            AppContext.saveJsCodeFile(tmp.id, () => {
+              count++;
+              if (count >= needSaveArray.length) {
+                AppContext.openFileArray = AppContext.openFileArray.filter(file => ids.findIndex(id => id === file.id) < 0);
+                AppContext.renderOpenFile(undefined, { treePosition: false });
+              }
+            });
+          });
+        },
+        function () {
+          AppContext.openFileArray = AppContext.openFileArray.filter(file => ids.findIndex(id => id === file.id) < 0);
+          AppContext.renderOpenFile(undefined, { treePosition: false });
+        }
+      );
+      return;
     }
     AppContext.openFileArray = AppContext.openFileArray.filter(file => ids.findIndex(id => id === file.id) < 0);
     AppContext.renderOpenFile(undefined, { treePosition: false });
-    console.log("关闭所有文件");
   }
+});
+
+// 保存文件
+AppContext.editorTools.buttons.saveFile.on("click", () => {
+  AppContext.saveJsCodeFile(AppContext.currentOpenFileId);
+});
+
+// 锁定文件
+AppContext.editorTools.buttons.lockFile.on("click", () => {
+  AppContext.lockJsFile(AppContext.currentOpenFileId);
+});
+
+// 删除文件
+AppContext.editorTools.buttons.deleteFile.on("click", () => {
+  const node = AppContext.workspaceTree.getNodeByKey(AppContext.currentOpenFileId);
+  if (!node) return;
+  layer.confirm(
+    `确定删除${node.folder ? '文件夹' : '文件'}？此操作不可撤销！<br />${node.data.fullPath}`,
+    { btn: ["删除", '取消'] },
+    function (index) {
+      layer.close(index);
+      const loadingAttr = loading.start();
+      deleteFile(node.data.dataId)
+        .then(() => {
+          const ids = [];
+          const getAllIds = (nodes) => {
+            if (!nodes || nodes.length <= 0) return;
+            // console.log("nodes ---> ", nodes.length);
+            nodes.forEach(tmp => {
+              if (tmp && tmp.data) {
+                ids.push(tmp.data.dataId);
+              }
+              if (tmp && tmp.children && tmp.children.length > 0) {
+                getAllIds(tmp.children);
+              }
+            });
+          };
+          getAllIds([node]);
+          // console.log("ids ---> ", ids, deleteFile);
+          AppContext.openFileArray = AppContext.openFileArray.filter(file => ids.indexOf(file.id) === -1);
+          AppContext.renderOpenFile(null, {});
+          node.remove();
+        })
+        .finally(() => loading.done(loadingAttr));
+    },
+  );
+});
+
+// 监听当前脚本日志
+AppContext.workbenchHeaderTools.listenerLogs.on("click", () => {
+  layer.msg("还未实现，敬请期待！(监听当前脚本日志)", { time: 1500 });
+});
+
+// 查看运行日志
+AppContext.workbenchHeaderTools.runLogs.on("click", () => {
+  layer.msg("还未实现，敬请期待！(查看运行日志)", { time: 1500 });
+});
+
+// 查看文件历史
+AppContext.workbenchHeaderTools.history.on("click", () => {
+  layer.msg("还未实现，敬请期待！(查看文件历史)", { time: 1500 });
+});
+
+// 查看快捷键
+AppContext.workbenchHeaderTools.keyboard.on("click", () => {
+  layer.msg("还未实现，敬请期待！(查看快捷键)", { time: 1500 });
 });

@@ -30,8 +30,8 @@ axios.interceptors.request.use(
     return { ...config, baseURL, timeout, validateStatus };
   },
   error => {
-    layer.closeAll('loading');
     notification.error({ message: '请求发送失败', description: '发送请求给服务端失败，请检查电脑网络，再重试' });
+    setTimeout(() => layer.closeAll('loading'), 3000);
     return Promise.reject(error);
   }
 );
@@ -45,8 +45,8 @@ const errorNotice = error => {
       if (data.validMessageList) {
         data.message = '请求参数校验失败';
         if (data.validMessageList.length > 0) {
-          const { errorMessage, value } = data.validMessageList[0];
-          data.message = `[${value}] -> [${errorMessage}]`;
+          const { filed, errorMessage } = data.validMessageList[0];
+          data.message = `[${filed}] -> [${errorMessage}]`;
         }
       }
       notification.error({ message: `${data.error} -> ${data.path}`, description: data.message });
@@ -67,12 +67,13 @@ const errorNotice = error => {
 axios.interceptors.response.use(
   response => response,
   error => {
-    layer.closeAll('loading');
     // resolve 通过， reject 驳回
+    let result = Promise.reject(error);
     if (errorNotice(error)) {
-      return Promise.reject(error.response);
+      result = Promise.reject(error.response);
     }
-    return Promise.reject(error);
+    setTimeout(() => layer.closeAll('loading'), 3000);
+    return result;
   }
 );
 
