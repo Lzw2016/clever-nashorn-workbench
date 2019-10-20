@@ -225,11 +225,6 @@ AppContext.editorTools.buttons.deleteFile.on("click", () => {
   );
 });
 
-// 监听当前脚本日志
-AppContext.workbenchHeaderTools.listenerLogs.on("click", () => {
-  layer.msg("还未实现，敬请期待！(监听当前脚本日志)", { time: 1500 });
-});
-
 // 查看运行日志
 AppContext.workbenchHeaderTools.runLogs.on("click", () => {
   layer.msg("还未实现，敬请期待！(查看运行日志)", { time: 1500 });
