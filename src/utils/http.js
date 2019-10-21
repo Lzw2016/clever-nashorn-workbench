@@ -1,5 +1,6 @@
 import axios from 'axios';
 // import qs from 'qs';
+import layer from "layer";
 import notification from './notification';
 
 const CodeMessage = {
@@ -30,6 +31,7 @@ axios.interceptors.request.use(
   },
   error => {
     notification.error({ message: '请求发送失败', description: '发送请求给服务端失败，请检查电脑网络，再重试' });
+    setTimeout(() => layer.closeAll('loading'), 3000);
     return Promise.reject(error);
   }
 );
@@ -41,8 +43,11 @@ const errorNotice = error => {
     const { data } = response;
     if (data && data.message) {
       if (data.validMessageList) {
-        // TODO 解析校验错误
         data.message = '请求参数校验失败';
+        if (data.validMessageList.length > 0) {
+          const { filed, errorMessage } = data.validMessageList[0];
+          data.message = `[${filed}] -> [${errorMessage}]`;
+        }
       }
       notification.error({ message: `${data.error} -> ${data.path}`, description: data.message });
       return true;
@@ -63,10 +68,12 @@ axios.interceptors.response.use(
   response => response,
   error => {
     // resolve 通过， reject 驳回
+    let result = Promise.reject(error);
     if (errorNotice(error)) {
-      return Promise.reject(error.response);
+      result = Promise.reject(error.response);
     }
-    return Promise.reject(error);
+    setTimeout(() => layer.closeAll('loading'), 3000);
+    return result;
   }
 );
 

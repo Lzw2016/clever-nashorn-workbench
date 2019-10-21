@@ -3,10 +3,11 @@ import lodash from "lodash";
 import * as esprima from "esprima";
 import * as estraverse from "estraverse";
 import * as eslintScope from "eslint-scope";
+import { loading } from "@/utils/loading";
 import fileTabArt from "./template/file-tab.art.html";
 import openedFileArt from "./template/opened-file.art.html";
 import fileFullPathArt from "./template/file-full-path.art.html";
-import { update } from "@/api/js-code-file-controller";
+import { update, lockFile } from "@/api/js-code-file-controller";
 
 // 整个App的上下文管理
 const AppContext = {
@@ -50,6 +51,7 @@ const AppContext = {
       workspaceTitle: $(".open-file-full-path .workspace-title"),
       fullPathTitle: $(".open-file-full-path .file-full-path-title"),
     },
+    listenerLogs: $(".workbench-header-tools .listener-logs"),
     debugMethods: $("#debug-method-name"),
     debug: $(".workbench-header-tools .fa-button.fa.debug"),
     runLogs: $(".workbench-header-tools .fa-button.fa.fa-file-text-o"),
@@ -241,6 +243,13 @@ AppContext.renderOpenFile = (
   //     editorViewStateMap[id] = undefined;
   //   }
   // });
+  editorInstance.updateOptions({ readOnly: fileData.readOnly === 1 });
+  if (fileData.readOnly === 0) {
+    AppContext.editorTools.buttons.lockFile.addClass("unlock");
+    // editorInstance
+  } else if (fileData.readOnly === 1) {
+    AppContext.editorTools.buttons.lockFile.removeClass("unlock");
+  }
 };
 
 // 文件内容变化
@@ -480,7 +489,7 @@ AppContext.parseDebugMethods = (jsCode) => {
 AppContext.parseDebugMethods = lodash.debounce(AppContext.parseDebugMethods, 600, { maxWait: 1000 });
 
 // 保存脚本文件
-AppContext.saveJsCodeFile = async (id) => {
+AppContext.saveJsCodeFile = async (id, callback) => {
   const saveId = id || AppContext.currentOpenFileId;
   const fileData = AppContext.openFileArray.find(file => file.id === saveId);
   if (!fileData.needSave) {
@@ -488,7 +497,7 @@ AppContext.saveJsCodeFile = async (id) => {
   }
   const { name, jsCode, filePath, description } = fileData;
   // TODO jsCode 死循环校验
-  const closeIndex = layer.load(1);
+  const loadingAttr = loading.start();
   const newFileData = await update(fileData.id, { name, jsCode, filePath, description });
   fileData.needSave = false;
   fileData.id = newFileData.id;
@@ -511,8 +520,47 @@ AppContext.saveJsCodeFile = async (id) => {
   const fullPath = fileData.filePath + fileData.name;
   const paths = fullPath.split("/").filter(path => path && path.length > 0);
   AppContext.workbenchHeaderTools.openFileFullPath.fullPathTitle.html(fileFullPathArt({ paths }));
-  layer.close(closeIndex);
+  loading.done(loadingAttr);
+  if (callback instanceof Function) callback();
   return fileData;
+};
+
+// 锁定文件不允许编辑
+AppContext.lockJsFile = async (id) => {
+  const lockId = id || AppContext.currentOpenFileId;
+  const fileData = AppContext.openFileArray.find(file => file.id === lockId);
+  // 读写权限：0-可读可写，1-只读
+  if (fileData.readOnly === 1) {
+    return;
+  }
+  if (fileData.needSave) {
+    layer.msg(`请先保存文件再锁定！[${fileData.name}]`, { time: 1500 });
+    return;
+  }
+  layer.confirm(
+    `确定锁定文件？锁定之后不能修改只能删除<br />${fileData.name}`,
+    { btn: ["锁定文件", '取消'] },
+    function (index) {
+      layer.close(index);
+      const loadingAttr = loading.start();
+      lockFile(fileData.id)
+        .then((newFileData) => {
+          AppContext.editorTools.buttons.lockFile.removeClass("unlock");
+          fileData.needSave = false;
+          fileData.id = newFileData.id;
+          fileData.bizType = newFileData.bizType;
+          fileData.groupName = newFileData.groupName;
+          fileData.nodeType = newFileData.nodeType;
+          fileData.filePath = newFileData.filePath;
+          fileData.name = newFileData.name;
+          fileData.jsCode = newFileData.jsCode;
+          fileData.description = newFileData.description;
+          fileData.createAt = newFileData.createAt;
+          fileData.updateAt = newFileData.updateAt;
+        })
+        .finally(() => loading.done(loadingAttr));
+    },
+  );
 };
 
 window.AppContext = AppContext;

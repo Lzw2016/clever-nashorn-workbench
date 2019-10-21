@@ -5,7 +5,7 @@ body {
     border: 1px solid rgb(65, 65, 66);
     opacity: 0.8;
   }
-  .layui-layer-loading .layui-layer-loading {
+  .layui-layer-loading .layui-layer-loading0 {
     width: 36px;
     height: 36px;
     background: url(../../assets/images/loading.svg) no-repeat;
@@ -25,5 +25,8 @@ body {
     background: url(../../assets/images/loading2.svg) no-repeat;
     background-size: 36px;
     animation: spin 1.2s linear infinite;
+  }
+  .layui-layer-shade {
+    opacity: 0.15 !important;
   }
 }
