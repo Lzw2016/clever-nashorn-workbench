@@ -78,7 +78,11 @@ jsCodeLib.push(
     /**
      * 初始化函数
      */
-    init(): void;
+    init: () => void;
+    /**
+     * 自定义导出属性
+     */
+    [propName: string]: any;
   }
 
   /**
@@ -205,6 +209,24 @@ jsCodeLib.push(
      * @param obj Java对象
      */
     javaToJsObject(obj: any): any;
+    /**
+     * 获取当前时间搓(毫秒)
+     */
+    currentTimeMillis(): number;
+    /**
+     * 获取当前时间 Date
+     */
+    nowDate(): Date;
+    /**
+     * 根据 时间字符串或者时间搓(毫秒) 创建时间
+     *
+     * @param dateStr 时间字符串或者时间搓(毫秒)
+     */
+    createDate(dateStr: string | number): Date;
+    /**
+     * Map key 字符串下划线转驼峰格式
+     */
+    underlineToCamel(obj: any): any;
   }
   /**
    * 基本工具
@@ -674,6 +696,11 @@ jsCodeLib.push(
      * @param end   end
      */
     vGet(key: string, start: number, end: number): string;
+    /**
+     * 获取Value的值
+     * @param key   key
+     */
+    vGet(key: string): any;
     /**
      * 将给定 key 的值设为 value ，并返回 key 的旧值(old value)
      * @param key   key

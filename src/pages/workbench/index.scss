@@ -11,7 +11,7 @@ $workbench-header-height: 30px;
 $workbench-footer-height: 22px;
 $body-background-color: rgb(30, 30, 30);
 $body-font-family: Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif;
-$body-font-size: 11px;
+$body-font-size: 12px;
 $tools-background-color: rgba(128, 128, 128, 0.2);
 $title-background-color: rgb(30, 30, 30);
 $title-color: rgba(204, 204, 204, 0.5);
@@ -444,7 +444,7 @@ body {
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
-              font-size: 13px;
+              font-size: 12px;
               font-weight: bold;
               font-family:"Segoe WPC", "Segoe UI", "Microsoft YaHei", sans-serif;
             }
@@ -457,7 +457,7 @@ body {
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
-              font-size: 13px;
+              font-size: 12px;
               font-weight: bold;
               font-family:"Segoe WPC", "Segoe UI", "Microsoft YaHei", sans-serif;
             }
@@ -652,11 +652,11 @@ body {
     }
     .log-filter {
       cursor: pointer;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       margin: 0 4px;
       width: 100px;
-      height: $editor-tools-height - 14px;
+      height: $editor-tools-height - 12px;
       background-color: rgb(60, 60, 60);
       color: rgb(240, 240, 240);
       border-color: rgb(60, 60, 60);
@@ -760,7 +760,7 @@ body {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
         font-family:"Segoe WPC", "Segoe UI", "Microsoft YaHei", sans-serif;
         max-width: 120px;
@@ -852,7 +852,7 @@ body {
     padding-bottom: 3px;
     .workspace-title {
       display: inline-block;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 450;
     }
     .file-full-path-title {
@@ -862,7 +862,7 @@ body {
       .path-title {
         cursor: pointer;
         display: inline-block;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 450;
         &:hover {
           color: rgba(255, 255, 255, 0.9);

@@ -211,12 +211,12 @@ const treeConfig = {
             description: "",
           })
             .then(successfulCallBack)
-            .catch(_ => data.requestServerCount--)
+            .catch(_ => { data.requestServerCount--; })
             .finally(() => loading.done(loadingAttr));
         } else {
           update(data.node.data.dataId, { name: name })
             .then(successfulCallBack)
-            .catch(_ => data.requestServerCount--)
+            .catch(_ => { data.requestServerCount--; })
             .finally(() => loading.done(loadingAttr));
         }
       }

@@ -22,34 +22,83 @@ let editorInstance;
 
 // 增加快捷键(可覆盖默认快捷键)
 const keyMapBinding = (monaco) => {
+  // Alt + / --> 智能提示
   editorInstance.addCommand(
     monaco.KeyMod.Alt | monaco.KeyCode.US_SLASH,
     () => editorInstance.trigger(null, 'editor.action.triggerSuggest', {}),
     '!findWidgetVisible && !inReferenceSearchEditor && !editorHasSelection'
   );
+  // Ctrl + Shift + U --> 选中内容转大写
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KEY_U,
     () => editorInstance.trigger(null, 'editor.action.transformToUppercase', {}),
   );
+  // Ctrl + Shift + I --> 选中内容转小写
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KEY_I,
     () => editorInstance.trigger(null, 'editor.action.transformToLowercase', {}),
   );
+  // Ctrl + Alt + L --> 代码格式化
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KEY_L,
     () => editorInstance.trigger(null, 'editor.action.formatDocument', {}),
     'editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly'
   );
+  // Ctrl + Alt + L --> 选中代码格式化
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KEY_L,
     () => editorInstance.trigger(null, 'editor.action.formatSelection', {}),
     'editorHasDocumentFormattingProvider && editorHasSelection && editorTextFocus && !editorReadonly'
   );
+  // Ctrl + Alt + O --> 优化导入语句
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KEY_O,
     () => editorInstance.trigger(null, 'editor.action.organizeImports', {}),
     'editorTextFocus && !editorReadonly && supportedCodeAction =~ /(\\s|^)source\\.organizeImports\\b/'
   );
+  // Shift + Enter 在下面插入一行
+  editorInstance.addCommand(
+    monaco.KeyMod.Shift | monaco.KeyCode.Enter,
+    () => editorInstance.trigger(null, 'editor.action.insertLineAfter', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + Shift + Enter 在上面插入一行
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Enter,
+    () => editorInstance.trigger(null, 'editor.action.insertLineBefore', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + D 向下复制一行
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_D,
+    () => editorInstance.trigger(null, 'editor.action.copyLinesDownAction', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + Y 删除行
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_Y,
+    () => editorInstance.trigger(null, 'editor.action.deleteLines', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + P 触发参数提示
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_P,
+    () => editorInstance.trigger(null, 'editor.action.triggerParameterHints', {}),
+    'editorHasSignatureHelpProvider && editorTextFocus'
+  );
+  // Ctrl + Shift + UP 向上移动行
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.UpArrow,
+    () => editorInstance.trigger(null, 'editor.action.moveLinesUpAction', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + Shift + Down 向下移动行
+  editorInstance.addCommand(
+    monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.DownArrow,
+    () => editorInstance.trigger(null, 'editor.action.moveLinesDownAction', {}),
+    'editorTextFocus && !editorReadonly'
+  );
+  // Ctrl + S --> 保存
   editorInstance.addCommand(
     monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
     () => AppContext.saveJsCodeFile(),
