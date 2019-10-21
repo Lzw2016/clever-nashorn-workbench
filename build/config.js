@@ -15,7 +15,7 @@ const runModeEnum = {
 const pathPrefix = '../';
 // 打包版本号
 // const appVersion = new Date().getTime();
-const appVersion = "v1.0.4";
+const appVersion = "v1.0.5";
 // 网站图标绝对路径
 const favicon = path.resolve(__dirname, `${pathPrefix}public/images/favicon.png`);
 // 项目根目录绝对路径
