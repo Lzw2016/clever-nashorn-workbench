@@ -1412,3 +1412,308 @@ interface RedisUtils {
  * 获取Redis交互工具(RedisExecutor)的实例
  */
 declare const RedisUtils: RedisUtils;
+
+// ----------------------------------------------------------------------------------------------------------------- 内部工具类 JestUtils JestExecutor
+/**
+ * ES错误信息
+ */
+interface EsError {
+  type: string;
+  reason: string;
+  index: string;
+  index_uuid: string;
+}
+/**
+ * ES查询数据
+ */
+interface EsHits {
+  total: number;
+  max_score: number;
+  hits: Array<any>;
+}
+/**
+ * 请求ES返回值
+ */
+interface JestResult {
+  acknowledged?: boolean;
+  index?: string;
+  shards_acknowledged?: string;
+  status?: number;
+  error?: EsError;
+  took?: number;
+  timed_out?: boolean;
+  hits?: EsHits;
+  [propName: string]: any;
+}
+/**
+ * ES查询排序参数
+ */
+interface EsQuerySort {
+  /**
+   * 排序字段
+   */
+  field: string;
+  /**
+   * ASC | DESC
+   */
+  order: string;
+}
+/**
+ * ES操作类
+ */
+interface JestExecutor {
+  /**
+   * 创建索引
+   * @param index    索引名称
+   * @param settings settings
+   * @param mappings mappings
+   * @param aliases  aliases
+   * @param payload  payload
+   * @param refresh  refresh
+   */
+  createIndex(index: string, settings: Map<string, any>, mappings: Map<string, any>, aliases: Map<string, any>, payload: Map<string, any>, refresh: boolean): JestResult;
+  /**
+   * 创建索引
+   * @param index    索引名称
+   * @param settings settings
+   * @param mappings mappings
+   * @param aliases  aliases
+   */
+  createIndex(index: string, settings: Map<string, any>, mappings: Map<string, any>, aliases: Map<string, any>): JestResult;
+  /**
+   * 创建索引
+   * @param index    索引名称
+   * @param settings settings
+   * @param mappings mappings
+   */
+  createIndex(index: string, settings: Map<string, any>, mappings: Map<string, any>): JestResult;
+  /**
+   * 创建索引
+   * @param index    索引名称
+   * @param settings settings
+   */
+  createIndex(index: string, settings: Map<string, any>): JestResult;
+  /**
+   * 删除索引
+   *
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param refresh refresh
+   */
+  deleteIndex(index: string, type?: string, refresh?: boolean): JestResult;
+  /**
+   * 新增或者更新数据
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param id      文档ID
+   * @param source  文档数据
+   * @param refresh refresh
+   */
+  saveOrUpdate(index: string, type: string, id: string, source: Map<string, any>, refresh?: boolean): JestResult;
+  /**
+   * 新增或者更新数据
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param id      文档ID
+   * @param source  文档数据
+   * @param refresh refresh
+   */
+  save(index: string, type: string, source: Map<string, any>): JestResult;
+  /**
+   * 使用update更新数据，文档：https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-update.html
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param id      数据id
+   * @param payload payload
+   * @param refresh refresh
+   */
+  update(index: string, type: string, id: string, payload: any, refresh?: boolean): JestResult;
+  /**
+   * 根据查询更新数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-update-by-query.html
+   * @param indexNames 索引名称集合
+   * @param indexTypes 文档类型集合
+   * @param payload    payload
+   * @param allow      是否允许不定义索引名称
+   * @param ignore     忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh    refresh
+   */
+  updateByQuery(indexNames: Array<string>, indexTypes: Array<string>, payload: any, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 根据查询更新数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-update-by-query.html
+   * @param indexNames 索引名称集合
+   * @param indexTypes 文档类型集合
+   * @param payload    payload
+   * @param refresh    refresh
+   */
+  updateByQuery(indexNames: Array<string>, indexTypes: Array<string>, payload: any, refresh?: boolean): JestResult;
+  /**
+   * 根据查询更新数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-update-by-query.html
+   * @param index   索引名称集
+   * @param type    文档类型集
+   * @param payload payload
+   * @param allow   是否允许不定义索引名称
+   * @param ignore  忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh refresh
+   */
+  updateByQuery(index: string, type: string, payload: any, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 根据查询更新数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-update-by-query.html
+   * @param index   索引名称集
+   * @param type    文档类型集
+   * @param payload payload
+   * @param refresh refresh
+   */
+  updateByQuery(index: string, type: string, payload: any, refresh?: boolean): JestResult;
+  /**
+   * 根据ID删除数据
+   * @param index   索引名称集
+   * @param type    文档类型集
+   * @param id      数据ID
+   * @param refresh refresh
+   */
+  deleteData(index: string, type: string, id: string, refresh?: boolean): JestResult;
+  /**
+   * 根据查询删除数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-delete-by-query.html
+   * @param indexNames 索引名称集合
+   * @param indexTypes 文档类型集合
+   * @param query      query
+   * @param allow      是否允许不定义索引名称
+   * @param ignore     忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh    refresh
+   */
+  deleteByQuery(indexNames: Array<string>, indexTypes: Array<string>, query: string, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 根据查询删除数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-delete-by-query.html
+   * @param indexNames 索引名称集合
+   * @param indexTypes 文档类型集合
+   * @param query      query
+   * @param refresh    refresh
+   */
+  deleteByQuery(indexNames: Array<string>, indexTypes: Array<string>, query: string, refresh?: boolean): JestResult;
+  /**
+   * 根据查询删除数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-delete-by-query.html
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param query   query
+   * @param allow   是否允许不定义索引名称
+   * @param ignore  忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh refresh
+   */
+  deleteByQuery(index: string, type: string, query: string, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 根据查询删除数据 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docs-delete-by-query.html
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param query   query
+   * @param refresh refresh
+   */
+  deleteByQuery(index: string, type: string, query: string, refresh?: boolean): JestResult;
+  /**
+   * 搜索查询
+   * @param indexNames        索引名称集合
+   * @param indexTypes        文档类型集合
+   * @param query             query
+   * @param includePattern    includePattern
+   * @param excludePattern    excludePattern
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   * @param enableTrackScores enableTrackScores
+   * @param allow             是否允许不定义索引名称
+   * @param ignore            忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh           refresh
+   */
+  search(indexNames: Array<string>, indexTypes: Array<string>, query: string, includePattern: string, excludePattern: string, sorts: Array<EsQuerySort>, enableTrackScores: boolean, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 搜索查询
+   * @param indexNames        索引名称集合
+   * @param indexTypes        文档类型集合
+   * @param query             query
+   * @param includePattern    includePattern
+   * @param excludePattern    excludePattern
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   */
+  search(indexNames: Array<string>, indexTypes: Array<string>, query: string, includePattern: string, excludePattern: string, sorts: Array<EsQuerySort>): JestResult;
+  /**
+   * 搜索查询
+   * @param indexNames        索引名称集合
+   * @param indexTypes        文档类型集合
+   * @param query             query
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   */
+  search(indexNames: Array<string>, indexTypes: Array<string>, query: string, sorts: Array<EsQuerySort>): JestResult;
+  /**
+   * 搜索查询
+   * @param index             索引名称集合
+   * @param type              文档类型集合
+   * @param query             query
+   * @param includePattern    includePattern
+   * @param excludePattern    excludePattern
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   * @param enableTrackScores enableTrackScores
+   * @param allow             是否允许不定义索引名称
+   * @param ignore            忽略不可用的索引，这包括不存在或已关闭的索引
+   * @param refresh           refresh
+   */
+  search(index: string, type: string, query: string, includePattern: string, excludePattern: string, sorts: Array<EsQuerySort>, enableTrackScores: boolean, allow: boolean, ignore: boolean, refresh: boolean): JestResult;
+  /**
+   * 搜索查询
+   * @param index             索引名称集合
+   * @param type              文档类型集合
+   * @param query             query
+   * @param includePattern    includePattern
+   * @param excludePattern    excludePattern
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   */
+  search(index: string, type: string, query: string, includePattern: string, excludePattern: string, sorts: Array<EsQuerySort>): JestResult;
+  /**
+   * 搜索查询
+   * @param index             索引名称集合
+   * @param type              文档类型集合
+   * @param query             query
+   * @param sorts             sorts --> [ {field: 'fieldName', order: 'ASC/DESC'}, ...]
+   */
+  search(index: string, type: string, query: string, sorts: Array<EsQuerySort>): JestResult;
+  /**
+   * 根据ID获取数据
+   * @param index   索引名称
+   * @param id      数据ID
+   * @param refresh refresh
+   */
+  getData(index: string, id: string, refresh?: boolean): JestResult;
+  /**
+   * 根据ID集合获取数据
+   * @param index   索引名称
+   * @param type    文档类型
+   * @param ids     数据ID集合
+   * @param refresh refresh
+   */
+  multiGet(index: string, type: string, ids: Array<string>, refresh?: boolean): JestResult;
+}
+
+/**
+ * 获取JestExecutor工具类
+ */
+interface JestUtils {
+  /**
+   * 获取默认的 JestExecutor
+   */
+  getDefaultJestExecutor(): JestExecutor;
+  /**
+   * 获取对应数据源的 JestExecutor
+   * @param jestName Jest 数据源名称
+   */
+  getJestExecutor(jestName: string): JestExecutor;
+}
+
+/**
+ * 获取ES交互工具(JestExecutor)的实例
+ */
+declare const JestUtils: JestUtils;
+
+
+
+
+
+
+
+
+
