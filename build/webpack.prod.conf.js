@@ -213,7 +213,7 @@ module.exports = {
     config.useOss
       ? new WebpackAliyunOss({
         from: [`${config.distPath}/**`, `!${config.distPath}/**/*.html`],
-        dist: `/${config.appVersion}/`,
+        dist: `${config.appVersion}/`,
         region: aliOssConf.region,
         accessKeyId: aliOssConf.accessKeyId,
         accessKeySecret: aliOssConf.accessKeySecret,
