@@ -3,12 +3,12 @@ import lodash from 'lodash';
 import AppContext from './context';
 import jsCodeLib from './js-code-lib';
 import { useOss, appVersion, runMode, runModeEnum } from '../../../build/config';
-import { ossUrl } from '../../../ali-oss-conf';
+import { cdnUrl } from '../../../ali-oss-conf';
 
 const isDev = runMode === runModeEnum.dev;
 // monaco-editor 资源文件路径配置
 monacoRequire.config({
-  baseUrl: (!isDev && useOss) ? `${ossUrl}/${appVersion}/public/js/monaco-editor` : "/public/js/monaco-editor",
+  baseUrl: (!isDev && useOss) ? `${cdnUrl}/${appVersion}/public/js/monaco-editor` : "/public/js/monaco-editor",
   paths: { vs: 'min/vs' },
   'vs/nls': {
     availableLanguages: {

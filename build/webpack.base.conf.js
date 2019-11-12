@@ -107,7 +107,7 @@ const getHtmlPlugin = () => {
       // HTML页面标题
       title: itemConfig.title,
       // 静态资源前缀
-      urlPrefix: (!isDev && config.useOss) ? `${aliOssConf.ossUrl}/${config.appVersion}/` : "/",
+      urlPrefix: (!isDev && config.useOss) ? `${aliOssConf.cdnUrl}/${config.appVersion}/` : "/",
     });
     // console.log("template", htmlWebpackConfig.template);
     htmlPluginArray.push(new HtmlWebpackPlugin(htmlWebpackConfig));
