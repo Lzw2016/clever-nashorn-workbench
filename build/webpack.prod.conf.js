@@ -22,7 +22,7 @@ module.exports = {
     path: config.distPath,
     filename: '[name].[chunkhash].bundle.js',
     chunkFilename: '[name].[chunkhash].chunk.js',
-    publicPath: config.useOss ? `${aliOssConf.cdnUrl}/${config.appVersion}/` : '',
+    publicPath: config.useOss ? `${aliOssConf.cdnUrl}/${config.appVersion}/` : '/',
   },
   mode: "production",
   // 加载器 loader 配置项
@@ -225,7 +225,7 @@ module.exports = {
           return { 'Cache-Control': 'max-age=31536000' };
         }
       })
-      : null,
+      : () => { },
   ],
   resolve: {
     // 设置可省略文件后缀名

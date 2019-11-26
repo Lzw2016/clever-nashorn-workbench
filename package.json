@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "  cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.conf.js --color --progress",
-    "build": "cross-env NODE_ENV=production  webpack --config build/webpack.prod.conf.js",
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
     "start": "yarn run dev"
   },
   "dependencies": {
