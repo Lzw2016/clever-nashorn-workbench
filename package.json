@@ -11,7 +11,7 @@
     "start": "yarn run dev"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "numeral": "^2.0.6",
     "qs": "^6.8.0",
